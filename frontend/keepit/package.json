@@ -7,8 +7,10 @@
     "react-dom": "^16.3.2",
     "react-scripts": "1.1.4"
   },
+
   "scripts": {
     "start": "react-scripts start",
+    "start:prod": "pushstate-server build",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
