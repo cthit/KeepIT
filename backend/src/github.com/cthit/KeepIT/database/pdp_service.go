@@ -2,13 +2,15 @@ package database
 
 import (
 	"../../KeepIT"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/gocraft/dbr"
+	"time"
 )
 
 func NewPDPServiceCreator(c *dbr.Connection) func() KeepIT.PDPService {
-	session := c.NewSession(&dbr.NullEventReceiver{})
+
 	return func() KeepIT.PDPService {
-		return PDPService{session: session}
+		return PDPService{session: c.NewSession(&dbr.NullEventReceiver{})}
 	}
 }
 
@@ -22,27 +24,69 @@ type PDPService struct {
 }
 
 func (s PDPService) GetAllActive() []KeepIT.PDP {
-	panic("implement me")
+	var result []KeepIT.PDP
+	s.session.Select("*").From("pdp_latest").
+		Where("start < ?", time.Now()).
+		Where("end > ?", time.Now()).
+		Where("removed = ?", false).
+		Load(&result)
+	return result
 }
 
-func (PDPService) GetAllInactive() []KeepIT.PDP {
-	panic("implement me")
+func (s PDPService) GetAllInactive() []KeepIT.PDP {
+	var result []KeepIT.PDP
+	s.session.Select("*").From("pdp_latest").
+		Where("start > ? OR end < ?", time.Now(), time.Now()).
+		Where("removed = ?", false).
+		Load(&result)
+	return result
 }
 
-func (PDPService) GetAllDeleted() []KeepIT.PDP {
-	panic("implement me")
+func (s PDPService) GetAllDeleted() []KeepIT.PDP {
+	var result []KeepIT.PDP
+	s.session.Select("*").From("pdp_latest").
+		Where("removed = ?", true).
+		Load(&result)
+	return result
 }
 
-func (PDPService) GetActive(user KeepIT.Person) []KeepIT.PDP {
-	panic("implement me")
+func (s PDPService) GetActive(user KeepIT.Person) []KeepIT.PDP {
+	cid := user.Cid
+	groups := []string{"hello", "dpo"} // TODO: Grupper personen är ordförande i
+
+	var result []KeepIT.PDP
+	s.session.Select("*").From("pdp_latest").
+		Where("start < ?", time.Now()).
+		Where("end > ?", time.Now()).
+		Where("(creator = ? OR committee IN ?)", cid, groups).
+		Where("removed = ?", false).
+		Load(&result)
+	return result
 }
 
-func (PDPService) GetInactive(user KeepIT.Person) []KeepIT.PDP {
-	panic("implement me")
+func (s PDPService) GetInactive(user KeepIT.Person) []KeepIT.PDP {
+	cid := user.Cid
+	groups := []string{"hello", "digit"} // TODO: Grupper personen är ordförande i
+
+	var result []KeepIT.PDP
+	s.session.Select("*").From("pdp_latest").
+		Where("start > ? OR end < ?", time.Now(), time.Now()).
+		Where("(creator = ? OR committee IN ?)", cid, groups).
+		Where("removed = ?", false).
+		Load(&result)
+	return result
 }
 
-func (PDPService) GetDeleted(user KeepIT.Person) []KeepIT.PDP {
-	panic("implement me")
+func (s PDPService) GetDeleted(user KeepIT.Person) []KeepIT.PDP {
+	cid := user.Cid
+	groups := []string{"hello", "digit"} // TODO: Grupper personen är ordförande i
+
+	var result []KeepIT.PDP
+	s.session.Select("*").From("pdp_latest").
+		Where("(creator = ? OR committee IN ?)", cid, groups).
+		Where("removed = ?", true).
+		Load(&result)
+	return result
 }
 
 func (PDPService) GetVersion(processingId int) []KeepIT.PDP {

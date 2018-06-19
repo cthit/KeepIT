@@ -1,11 +1,16 @@
 package KeepIT
 
-import "time"
+import (
+	"encoding/json"
+	"fmt"
+	"time"
+)
 
 type PDP struct {
-	VersionNumber int         `json:"version_number"`
-	ProcessingId  int         `json:"processing_id"`
-	Creator       Person      `json:"creator"`
+	VersionNumber int         `json:"version_number" db:"version_id"`
+	ProcessingId  int         `json:"processing_id" db:"id"`
+	Creator       string      `json:"-" db:"creator"`
+	CreatorObject Person      `json:"creator",db:"-"`
 	Committee     string      `json:"committee"`
 	Start         time.Time   `json:"start"`
 	End           time.Time   `json:"end"`
@@ -15,4 +20,10 @@ type PDP struct {
 	LastEdited    time.Time   `json:"last_edited"`
 	Removed       bool        `json:"removed"`
 	Chairman      Person      `json:"chairman"`
+}
+
+func (p PDP) PrettyPrint() {
+	r, _ := json.Marshal(p)
+	fmt.Println(string(r))
+
 }
