@@ -41,8 +41,8 @@ CREATE TABLE `pdps` (
 -- Ersättningsstruktur för vy `pdp_latest`
 -- (See below for the actual view)
 --
-CREATE TABLE `pdp_latest` (
-);
+-- CREATE TABLE `pdp_latest` (
+-- );
 
 -- --------------------------------------------------------
 
@@ -77,7 +77,7 @@ DELIMITER ;
 --
 -- Struktur för vy `pdp_latest`
 --
-DROP TABLE IF EXISTS `pdp_latest`;
+-- DROP TABLE IF EXISTS `pdp_latest`;
 -- Error reading structure for table keepit.pdp_latest: #1046 - Ingen databas i användning
 
 --
