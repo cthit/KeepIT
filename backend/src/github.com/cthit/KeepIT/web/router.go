@@ -8,7 +8,7 @@ import (
 
 var DEBUG = false
 
-func Router(pdpServiceProvider func() KeepIT.PDPService) http.Handler {
+func Router(pdpServiceProvider func() KeepIT.PDPService, personServiceProvider func() KeepIT.PersonService) http.Handler {
 	router := web.NewWithPrefix(
 		Context{},
 		"/v2.0")
@@ -18,7 +18,9 @@ func Router(pdpServiceProvider func() KeepIT.PDPService) http.Handler {
 		router.Middleware(web.ShowErrorsMiddleware)
 	}
 
-	router.Middleware(SetPDPService(pdpServiceProvider()))
+	router.Middleware(SetPDPService(pdpServiceProvider))
+	router.Middleware(SetPersonService(personServiceProvider))
+	router.Middleware((*Context).Auth)
 
 	router.Get("/pdp", (*Context).ListPDP)
 	router.Post("/pdp", (*Context).CreatePDP)

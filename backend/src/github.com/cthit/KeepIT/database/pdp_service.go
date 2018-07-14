@@ -2,17 +2,18 @@ package database
 
 import (
 	"../../KeepIT"
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gocraft/dbr"
 	"time"
 )
 
-func NewPDPServiceCreator(c *dbr.Connection, service KeepIT.PersonService) func() KeepIT.PDPService {
+func NewPDPServiceCreator(c *dbr.Connection) func() KeepIT.PDPService {
 
 	return func() KeepIT.PDPService {
+		fmt.Println("jahaja")
 		return PDPService{
-			session:       c.NewSession(&dbr.NullEventReceiver{}),
-			personService: service,
+			session: c.NewSession(&dbr.NullEventReceiver{}),
 		}
 	}
 }
@@ -26,8 +27,10 @@ func NewDatabaseConnection(driver string, dsn string) *dbr.Connection {
 }
 
 type PDPService struct {
-	session       *dbr.Session
-	personService KeepIT.PersonService
+	session *dbr.Session
+}
+
+func (s PDPService) Destroy() {
 }
 
 func (s PDPService) GetAllActive() ([]KeepIT.PDP, error) {
@@ -37,7 +40,7 @@ func (s PDPService) GetAllActive() ([]KeepIT.PDP, error) {
 		Where("end > ?", time.Now()).
 		Where("removed = ?", false).
 		Load(&result)
-	return s.personService.Fill(result)
+	return result, nil
 }
 
 func (s PDPService) GetAllInactive() ([]KeepIT.PDP, error) {
@@ -46,7 +49,7 @@ func (s PDPService) GetAllInactive() ([]KeepIT.PDP, error) {
 		Where("start > ? OR end < ?", time.Now(), time.Now()).
 		Where("removed = ?", false).
 		Load(&result)
-	return s.personService.Fill(result)
+	return result, nil
 }
 
 func (s PDPService) GetAllDeleted() ([]KeepIT.PDP, error) {
@@ -54,55 +57,72 @@ func (s PDPService) GetAllDeleted() ([]KeepIT.PDP, error) {
 	s.session.Select("*").From("pdp_latest").
 		Where("removed = ?", true).
 		Load(&result)
-	return s.personService.Fill(result)
+	return result, nil
 }
 
 func (s PDPService) GetActive(user KeepIT.Person) ([]KeepIT.PDP, error) {
 	cid := user.Cid
-	groups, err := s.personService.GroupsWithChairman(user)
+	groups := user.ChairmanIn
+
+	var result []KeepIT.PDP
+
+	query := s.session.Select("*").From("pdp_latest").
+		Where("start < ?", time.Now()).
+		Where("end > ?", time.Now()).
+		Where("removed = ?", false)
+
+	if len(groups) > 0 {
+		query = query.Where("(creator = ? OR committee IN ?)", cid, groups)
+	} else {
+		query = query.Where("(creator = ?)", cid)
+	}
+	_, err := query.Load(&result)
 	if err != nil {
 		return nil, err
 	}
-
-	var result []KeepIT.PDP
-	s.session.Select("*").From("pdp_latest").
-		Where("start < ?", time.Now()).
-		Where("end > ?", time.Now()).
-		Where("(creator = ? OR committee IN ?)", cid, groups).
-		Where("removed = ?", false).
-		Load(&result)
-	return s.personService.Fill(result)
+	return result, nil
 }
 
 func (s PDPService) GetInactive(user KeepIT.Person) ([]KeepIT.PDP, error) {
 	cid := user.Cid
-	groups, err := s.personService.GroupsWithChairman(user)
+	groups := user.ChairmanIn
+
+	var result []KeepIT.PDP
+	query := s.session.Select("*").From("pdp_latest").
+		Where("start > ? OR end < ?", time.Now(), time.Now()).
+		Where("removed = ?", false)
+
+	if len(groups) > 0 {
+		query = query.Where("(creator = ? OR committee IN ?)", cid, groups)
+	} else {
+		query = query.Where("(creator = ?)", cid)
+	}
+	_, err := query.Load(&result)
 	if err != nil {
 		return nil, err
 	}
-
-	var result []KeepIT.PDP
-	s.session.Select("*").From("pdp_latest").
-		Where("start > ? OR end < ?", time.Now(), time.Now()).
-		Where("(creator = ? OR committee IN ?)", cid, groups).
-		Where("removed = ?", false).
-		Load(&result)
-	return s.personService.Fill(result)
+	return result, nil
 }
 
 func (s PDPService) GetDeleted(user KeepIT.Person) ([]KeepIT.PDP, error) {
 	cid := user.Cid
-	groups, err := s.personService.GroupsWithChairman(user)
+	groups := user.ChairmanIn
+
+	var result []KeepIT.PDP
+
+	query := s.session.Select("*").From("pdp_latest").
+		Where("removed = ?", true)
+
+	if len(groups) > 0 {
+		query = query.Where("(creator = ? OR committee IN ?)", cid, groups)
+	} else {
+		query = query.Where("(creator = ?)", cid)
+	}
+	_, err := query.Load(&result)
 	if err != nil {
 		return nil, err
 	}
-
-	var result []KeepIT.PDP
-	s.session.Select("*").From("pdp_latest").
-		Where("(creator = ? OR committee IN ?)", cid, groups).
-		Where("removed = ?", true).
-		Load(&result)
-	return s.personService.Fill(result)
+	return result, nil
 }
 
 func (s PDPService) GetVersions(processingId int) ([]KeepIT.PDP, error) {
@@ -113,7 +133,7 @@ func (s PDPService) GetVersions(processingId int) ([]KeepIT.PDP, error) {
 		LeftJoin("pdp_versions", "pdps.pdp_id = pdp_versions.pdp_id").
 		Where("pdps.pdp_id = ?", processingId).
 		Load(&result)
-	return s.personService.Fill(result)
+	return result, nil
 }
 
 func (s PDPService) Update(modefied KeepIT.PDP) error {

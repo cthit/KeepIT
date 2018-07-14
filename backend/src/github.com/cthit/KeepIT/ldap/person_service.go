@@ -12,26 +12,25 @@ type LDAPPersonService struct {
 	Connection *ldap.Conn
 }
 
-func NewLDAPPersonService(url, servername, username, password string) (*LDAPPersonService, error) {
+func NewPersonServiceCreator(url, servername, username, password string) func() KeepIT.PersonService {
 
-	l, err := ldap.DialTLS("tcp", url, &tls.Config{ServerName: servername})
-	if err != nil {
-		return nil, err
+	return func() KeepIT.PersonService {
+		l, err := ldap.DialTLS("tcp", url, &tls.Config{ServerName: servername})
+		if err != nil {
+			return nil
+		}
+
+		err = l.Bind(username, password)
+		if err != nil {
+			return nil
+		}
+
+		ld := &LDAPPersonService{
+			Connection: l,
+		}
+
+		return ld
 	}
-	// FIXME: Close connection on garbage collection
-	//defer l.Close()
-
-	err = l.Bind(username, password)
-	if err != nil {
-		return nil, err
-	}
-
-	ld := &LDAPPersonService{
-		Connection: l,
-	}
-
-	return ld, nil
-
 }
 
 func (s LDAPPersonService) Destroy() {

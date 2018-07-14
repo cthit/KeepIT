@@ -1,20 +1,20 @@
 package main
 
 import (
-	"../../KeepIT"
 	"../database"
+	"../ldap"
 	"../web"
+	"log"
+	"net/http"
 )
 
 func main() {
 	web.DEBUG = true
+
+	personServiceCreator := ldap.NewPersonServiceCreator("ldap.chalmers.it:636", "chalmers.it", "cn=digit,dc=chalmers,dc=it", "password")
+
 	connection := database.NewDatabaseConnection("mysql", "root:123abc@tcp(localhost)/keepit?parseTime=true")
-	//log.Fatal(http.ListenAndServe(":8081", web.Router(database.NewPDPServiceCreator(connection))))
-	for _, a := range database.NewPDPServiceCreator(connection)().GetActive(KeepIT.Person{
-		Cid:  "karlwik",
-		Nick: "Gurgy",
-		Mail: "Gurgyar@gmail.com",
-	}) {
-		a.PrettyPrint()
-	}
+	defer connection.Close()
+
+	log.Fatal(http.ListenAndServe(":8081", web.Router(database.NewPDPServiceCreator(connection), personServiceCreator)))
 }

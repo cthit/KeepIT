@@ -11,4 +11,6 @@ type PDPService interface {
 	Update(modefied PDP) error
 	Delete(ProcessingId int) error
 	Create(new PDP) (int, error)
+
+	Destroy()
 }
