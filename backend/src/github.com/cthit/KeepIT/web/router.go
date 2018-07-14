@@ -21,6 +21,9 @@ func Router(pdpServiceProvider func() KeepIT.PDPService, personServiceProvider f
 	router.Middleware(SetPDPService(pdpServiceProvider))
 	router.Middleware(SetPersonService(personServiceProvider))
 	router.Middleware((*Context).Auth)
+	router.Middleware((*Context).Cors)
+
+	router.OptionsHandler((*Context).OptionsHandler)
 
 	router.Get("/pdp", (*Context).ListPDP)
 	router.Post("/pdp", (*Context).CreatePDP)

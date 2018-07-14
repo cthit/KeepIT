@@ -2,7 +2,6 @@ package database
 
 import (
 	"../../KeepIT"
-	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gocraft/dbr"
 	"time"
@@ -11,7 +10,6 @@ import (
 func NewPDPServiceCreator(c *dbr.Connection) func() KeepIT.PDPService {
 
 	return func() KeepIT.PDPService {
-		fmt.Println("jahaja")
 		return PDPService{
 			session: c.NewSession(&dbr.NullEventReceiver{}),
 		}
