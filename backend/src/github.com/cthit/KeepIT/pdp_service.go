@@ -1,14 +1,14 @@
 package KeepIT
 
 type PDPService interface {
-	GetAllActive() []PDP
-	GetAllInactive() []PDP
-	GetAllDeleted() []PDP
-	GetActive(user Person) []PDP   // Get pdps where user is owner or chairman
-	GetInactive(user Person) []PDP // Get pdps where user is owner or chairman
-	GetDeleted(user Person) []PDP  // Get pdps where user is owner or chairman
-	GetVersion(processingId int) []PDP
-	Update(ProcessingId int, modefied PDP)
-	Delete(ProcessingId int)
-	Create(new PDP)
+	GetAllActive() ([]PDP, error)
+	GetAllInactive() ([]PDP, error)
+	GetAllDeleted() ([]PDP, error)
+	GetActive(user Person) ([]PDP, error)   // Get pdps where user is owner or chairman
+	GetInactive(user Person) ([]PDP, error) // Get pdps where user is owner or chairman
+	GetDeleted(user Person) ([]PDP, error)  // Get pdps where user is owner or chairman
+	GetVersions(processingId int) ([]PDP, error)
+	Update(modefied PDP) error
+	Delete(ProcessingId int) error
+	Create(new PDP) (int, error)
 }

@@ -5,3 +5,8 @@ type Person struct {
 	Nick string `json:"nick"`
 	Mail string `json:"mail"`
 }
+
+type PersonService interface {
+	Fill([]PDP) ([]PDP, error)
+	GroupsWithChairman(Person) ([]string, error)
+}

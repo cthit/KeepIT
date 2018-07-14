@@ -8,9 +8,10 @@ import (
 
 type PDP struct {
 	VersionNumber int         `json:"version_number" db:"version_id"`
-	ProcessingId  int         `json:"processing_id" db:"id"`
-	Creator       string      `json:"-" db:"creator"`
-	CreatorObject Person      `json:"creator",db:"-"`
+	ProcessingId  int         `json:"id" db:"pdp_id"`
+	Title         string      `json:"title" db:"title"`
+	CreatorId     string      `json:"-" db:"creator"`
+	Creator       Person      `json:"creator" db:"-"`
 	Committee     string      `json:"committee"`
 	Start         time.Time   `json:"start"`
 	End           time.Time   `json:"end"`
@@ -25,5 +26,4 @@ type PDP struct {
 func (p PDP) PrettyPrint() {
 	r, _ := json.Marshal(p)
 	fmt.Println(string(r))
-
 }
