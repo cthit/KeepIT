@@ -10,16 +10,15 @@ var DEBUG = false
 
 func Router(pdpServiceProvider func() KeepIT.PDPService) http.Handler {
 	router := web.NewWithPrefix(
-		Context{
-			PDPService: pdpServiceProvider(),
-		},
+		Context{},
 		"/v2.0")
 
 	router.Middleware(web.LoggerMiddleware)
 	if DEBUG {
 		router.Middleware(web.ShowErrorsMiddleware)
 	}
-	router.Middleware((*Context).SetHelloCount)
+
+	router.Middleware(SetPDPService(pdpServiceProvider()))
 
 	router.Get("/pdp", (*Context).ListPDP)
 	router.Post("/pdp", (*Context).CreatePDP)
