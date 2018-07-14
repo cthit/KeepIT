@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type Context struct {
@@ -36,16 +37,25 @@ func SetPersonService(serviceProvider func() KeepIT.PersonService) func(*Context
 
 func (c *Context) Auth(rw web.ResponseWriter, req *web.Request, next web.NextMiddlewareFunc) {
 	c.User = KeepIT.Person{
-		Cid: "levenw", // FIXME
+		Cid: "svenel", // FIXME
 	}
-	groups, err := c.PersonService.GroupsWithChairman(c.User)
+	charirmanGroups, err := c.PersonService.GroupsWithChairman(c.User)
 	if err != nil {
+		fmt.Println(err)
+		rw.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	groups, err := c.PersonService.Groups(c.User)
+	if err != nil {
+		fmt.Println(err)
 		rw.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	// if is dpo or chairman of styrit c.responsibleForAll = true // TODO
-	c.User.ChairmanIn = groups
+	c.User.ChairmanIn = charirmanGroups
+	c.User.Groups = groups
 	next(rw, req)
 }
 
@@ -157,12 +167,14 @@ func (c *Context) CreatePDP(rw web.ResponseWriter, req *web.Request) {
 	body, err := ioutil.ReadAll(req.Body)
 	req.Body.Close()
 	if err != nil {
+		fmt.Println(err)
 		rw.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	err = json.Unmarshal(body, &n)
 	if err != nil {
+		fmt.Println(err)
 		rw.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -176,6 +188,7 @@ func (c *Context) CreatePDP(rw web.ResponseWriter, req *web.Request) {
 
 	id, err := c.PDPService.Create(n)
 	if err != nil {
+		fmt.Println(err)
 		rw.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -190,46 +203,126 @@ func (c *Context) UpdatePDP(rw web.ResponseWriter, req *web.Request) {
 	body, err := ioutil.ReadAll(req.Body)
 	req.Body.Close()
 	if err != nil {
+		fmt.Println(err)
 		rw.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	err = json.Unmarshal(body, &n)
 	if err != nil {
+		fmt.Println(err)
 		rw.WriteHeader(http.StatusBadRequest)
 		return
 	}
 	value, err := strconv.ParseInt(req.PathParams["id"], 10, 32)
 	if err != nil {
+		fmt.Println(err)
 		rw.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	//TODO: Check that the pdp exists
-	//TODO: Check that the user is allowed to edit the pdp
+	pdps, err := c.PDPService.GetVersions(int(value))
+	if err != nil {
+		fmt.Println(err)
+		rw.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if len(pdps) == 0 {
+		fmt.Println("PDP does not exist!")
+		rw.WriteHeader(http.StatusNotFound)
+		return
+	}
 
-	// TODO: validation
+	pdp := pdps[len(pdps)-1]
+	if pdp.CreatorId != c.User.Cid {
+		fmt.Println("User is not creator of this pdp")
+		rw.WriteHeader(http.StatusForbidden)
+		return
+	}
+
+	faults := validateUpdate(n, pdp)
+	if len(faults) > 0 {
+		fmt.Println(faults)
+		rw.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	n.ProcessingId = int(value)
 	err = c.PDPService.Update(n)
 	if err != nil {
+		fmt.Println(err)
 		rw.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	rw.WriteHeader(http.StatusOK)
 }
+func validateUpdate(n KeepIT.PDP, old KeepIT.PDP) []string {
+	var faults []string
+	if n.Title == "" {
+		faults = append(faults, "Title was empty")
+	}
+	if n.Eula == "" {
+		faults = append(faults, "Eula was empty")
+	}
+	if n.TargetGroup != "Everyone" && n.TargetGroup != "Fkit members" && n.TargetGroup != "Committee members" {
+		faults = append(faults, "Target type not valid")
+	}
+	if n.End.Before(n.Start) {
+		faults = append(faults, "Ends before it starts")
+	}
+	if time.Now().After(old.Start) {
+		if n.End.After(old.End) {
+			faults = append(faults, "Can't keep data for longer that specified at stsart of collection")
+		}
+		if !n.Start.Equal(old.Start) {
+			faults = append(faults, "A passed start date cannot be moved")
+		}
+		if n.Eula != old.Eula {
+			faults = append(faults, "The eual of a started collection can not be changed")
+		}
+		if n.TargetGroup == "Fkit members" && old.TargetGroup == "Everyone" {
+			faults = append(faults, "You cant make the target group narrower after the collection has started")
+		}
+		if n.TargetGroup == "Committee members" && (old.TargetGroup == "Everyone" || old.TargetGroup == "Fkit members") {
+			faults = append(faults, "You cant make the target group narrower after the collection has started")
+		}
+	}
+	if time.Now().After(old.End) {
+		faults = append(faults, "Can't change a pdp that has expired")
+	}
+	return faults
+}
 
 func (c *Context) DeletePDP(rw web.ResponseWriter, req *web.Request) {
 	value, err := strconv.ParseInt(req.PathParams["id"], 10, 32)
 	if err != nil {
+		fmt.Println(err)
 		rw.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	// TODO: Make sure user is allowed to delete pdp
+	pdps, err := c.PDPService.GetVersions(int(value))
+	if err != nil {
+		fmt.Println(err)
+		rw.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if len(pdps) == 0 {
+		fmt.Println("PDP does not exist!")
+		rw.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	pdp := pdps[len(pdps)-1]
+	if pdp.CreatorId != c.User.Cid {
+		fmt.Println("User is not creator of this pdp")
+		rw.WriteHeader(http.StatusForbidden)
+		return
+	}
 
 	err = c.PDPService.Delete(int(value))
 	if err != nil {
+		fmt.Println(err)
 		rw.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -239,11 +332,45 @@ func (c *Context) DeletePDP(rw web.ResponseWriter, req *web.Request) {
 func (c *Context) ListPDPHistory(rw web.ResponseWriter, req *web.Request) {
 	value, err := strconv.ParseInt(req.PathParams["id"], 10, 32)
 	if err != nil {
+		fmt.Println(err)
 		rw.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	// TODO: Makes sure user is allowed to view pdp
+	// Make sure user is allowed to view the pdp
+	if !c.ResponsibleForAll {
+		active, err := c.PDPService.GetActive(c.User)
+		if err != nil {
+			fmt.Println(err)
+			rw.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		inactive, err := c.PDPService.GetInactive(c.User)
+		if err != nil {
+			fmt.Println(err)
+			rw.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		deleted, err := c.PDPService.GetDeleted(c.User)
+		if err != nil {
+			fmt.Println(err)
+			rw.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		pdps := append(append(active, inactive...), deleted...)
+		found := false
+		for _, pdp := range pdps {
+			if pdp.ProcessingId == int(value) {
+				found = true
+				break
+			}
+		}
+		if !found {
+			fmt.Println("User is not authorized to view this pdp")
+			rw.WriteHeader(http.StatusForbidden)
+			return
+		}
+	}
 
 	result, err := c.PDPService.GetVersions(int(value))
 
@@ -252,6 +379,7 @@ func (c *Context) ListPDPHistory(rw web.ResponseWriter, req *web.Request) {
 	// Marshal data
 	data, err := json.Marshal(filled)
 	if err != nil {
+		fmt.Println(err)
 		rw.WriteHeader(http.StatusInternalServerError)
 		return
 	}

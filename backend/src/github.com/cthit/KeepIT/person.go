@@ -5,11 +5,13 @@ type Person struct {
 	Nick       string   `json:"nick"`
 	Mail       string   `json:"mail"`
 	ChairmanIn []string `json:"-" db:"-"`
+	Groups     []string `json:"-" db:"-"`
 }
 
 type PersonService interface {
 	Fill([]PDP) ([]PDP, error)
 	GroupsWithChairman(Person) ([]string, error)
+	Groups(Person) ([]string, error)
 
 	Destroy()
 }

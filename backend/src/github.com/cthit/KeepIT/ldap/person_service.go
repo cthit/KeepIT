@@ -115,6 +115,45 @@ func (s LDAPPersonService) GroupsWithChairman(person KeepIT.Person) ([]string, e
 	return res, nil
 }
 
+func (s LDAPPersonService) Groups(person KeepIT.Person) ([]string, error) {
+	searchRequest := ldap.NewSearchRequest(
+		fmt.Sprintf("ou=fkit,ou=groups,dc=chalmers,dc=it"),
+		ldap.ScopeWholeSubtree, ldap.NeverDerefAliases, 0, 0, false,
+		"(&(type=committee))", // The filter to apply
+		[]string{"member"},    // A list attributes to retrieve
+		nil,
+	)
+
+	committeGroups, err := s.Connection.Search(searchRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	var dnOfActiveGroups []string
+	for _, entry := range committeGroups.Entries {
+		if strings.Split(strings.Split(entry.DN, ",")[0], "=")[1] == strings.Split(strings.Split(entry.DN, ",")[1], "=")[1] { // is not year or patet group
+			dnOfActiveGroups = append(dnOfActiveGroups, entry.GetAttributeValues("member")...)
+		}
+	}
+
+	var res []string
+
+	for _, dn := range dnOfActiveGroups {
+		for _, entry := range committeGroups.Entries {
+			if dn == entry.DN { // entry is active group
+				for _, member := range entry.GetAttributeValues("member") { // for every member
+					if strings.Split(strings.Split(member, ",")[0], "=")[1] == person.Cid { // if member is our user
+						res = append(res, strings.Split(strings.Split(entry.DN, ",")[1], "=")[1]) // add groups to result
+						break
+					}
+				}
+				break
+			}
+		}
+	}
+	return res, nil
+}
+
 func (s LDAPPersonService) Fill(in []KeepIT.PDP) ([]KeepIT.PDP, error) {
 	for i, _ := range in {
 		creator, err := s.person(in[i].CreatorId)
