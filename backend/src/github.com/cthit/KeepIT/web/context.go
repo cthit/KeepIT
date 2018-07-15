@@ -39,12 +39,18 @@ func (c *Context) Auth(rw web.ResponseWriter, req *web.Request, next web.NextMid
 	c.User = KeepIT.Person{
 		Cid: "svenel", // FIXME
 	}
+
+	next(rw, req)
+}
+
+func (c *Context) PopulateUser(rw web.ResponseWriter, req *web.Request, next web.NextMiddlewareFunc) {
 	charirmanGroups, err := c.PersonService.GroupsWithChairman(c.User)
 	if err != nil {
 		fmt.Println(err)
 		rw.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	c.User.ChairmanIn = charirmanGroups
 
 	groups, err := c.PersonService.Groups(c.User)
 	if err != nil {
@@ -52,10 +58,15 @@ func (c *Context) Auth(rw web.ResponseWriter, req *web.Request, next web.NextMid
 		rw.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
-	// if is dpo or chairman of styrit c.responsibleForAll = true // TODO
-	c.User.ChairmanIn = charirmanGroups
 	c.User.Groups = groups
+
+	for _, group := range c.User.Groups {
+		if group == "styrit" || group == "dpo" {
+			c.ResponsibleForAll = true
+			break
+		}
+	}
+
 	next(rw, req)
 }
 
@@ -164,6 +175,8 @@ func (c *Context) ListPDP(rw web.ResponseWriter, req *web.Request) {
 func (c *Context) CreatePDP(rw web.ResponseWriter, req *web.Request) {
 	var n KeepIT.PDP
 
+	n.Removed = false
+
 	body, err := ioutil.ReadAll(req.Body)
 	req.Body.Close()
 	if err != nil {
@@ -182,9 +195,28 @@ func (c *Context) CreatePDP(rw web.ResponseWriter, req *web.Request) {
 	// Set user
 	n.CreatorId = c.User.Cid
 
-	// TODO Make sure committee is valid
+	// check that user belongs to the committe
+	belongsToCommittee := false
+	for _, committee := range c.User.Groups {
+		if committee == n.Committee {
+			belongsToCommittee = true
+			break
+		}
+	}
+	if !belongsToCommittee {
+		fmt.Println("User can not create pdps for this committee")
+		rw.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
-	// TODO More validation
+	faults := validateCreate(n)
+	if len(faults) > 0 {
+		fmt.Println(faults)
+		rw.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	// check times? TODO
 
 	id, err := c.PDPService.Create(n)
 	if err != nil {
@@ -195,6 +227,23 @@ func (c *Context) CreatePDP(rw web.ResponseWriter, req *web.Request) {
 
 	rw.WriteHeader(http.StatusCreated)
 	fmt.Fprintf(rw, "{id:%d}", id)
+}
+
+func validateCreate(pdp KeepIT.PDP) []string {
+	var faults []string
+	if pdp.Title == "" {
+		faults = append(faults, "Title was empty")
+	}
+	if pdp.Eula == "" {
+		faults = append(faults, "Eula was empty")
+	}
+	if pdp.TargetGroup != "Everyone" && pdp.TargetGroup != "Fkit members" && pdp.TargetGroup != "Committee members" {
+		faults = append(faults, "Target type not valid")
+	}
+	if pdp.End.Before(pdp.Start) {
+		faults = append(faults, "Ends before it starts")
+	}
+	return faults
 }
 
 func (c *Context) UpdatePDP(rw web.ResponseWriter, req *web.Request) {
@@ -270,7 +319,7 @@ func validateUpdate(n KeepIT.PDP, old KeepIT.PDP) []string {
 	if n.End.Before(n.Start) {
 		faults = append(faults, "Ends before it starts")
 	}
-	if time.Now().After(old.Start) {
+	if time.Now().After(old.Start) { // Maybe remove this? TODO
 		if n.End.After(old.End) {
 			faults = append(faults, "Can't keep data for longer that specified at stsart of collection")
 		}

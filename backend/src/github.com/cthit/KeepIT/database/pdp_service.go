@@ -164,6 +164,7 @@ func (s PDPService) Create(new KeepIT.PDP) (int, error) {
 	}
 
 	new.ProcessingId = int(id)
+	new.LastEdited = time.Now()
 
 	_, err = tx.InsertInto("pdp_versions").
 		Columns("pdp_id", "title", "eula", "target_group", "sensitive", "start", "end", "last_changed").
