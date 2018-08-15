@@ -12,6 +12,6 @@ type PersonService interface {
 	Fill([]PDP) ([]PDP, error)
 	GroupsWithChairman(Person) ([]string, error)
 	Groups(Person) ([]string, error)
-
+	Person(cid string) (Person, error)
 	Destroy()
 }

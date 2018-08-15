@@ -37,7 +37,7 @@ func (s LDAPPersonService) Destroy() {
 	s.Connection.Close()
 }
 
-func (s LDAPPersonService) person(cid string) (KeepIT.Person, error) {
+func (s LDAPPersonService) Person(cid string) (KeepIT.Person, error) {
 	searchRequest := ldap.NewSearchRequest(
 		fmt.Sprintf("uid=%s,ou=people,dc=chalmers,dc=it", cid),
 		ldap.ScopeWholeSubtree, ldap.NeverDerefAliases, 0, 0, false,
@@ -155,8 +155,8 @@ func (s LDAPPersonService) Groups(person KeepIT.Person) ([]string, error) {
 }
 
 func (s LDAPPersonService) Fill(in []KeepIT.PDP) ([]KeepIT.PDP, error) {
-	for i, _ := range in {
-		creator, err := s.person(in[i].CreatorId)
+	for i := range in {
+		creator, err := s.Person(in[i].CreatorId)
 		if err != nil {
 			return nil, err
 		}

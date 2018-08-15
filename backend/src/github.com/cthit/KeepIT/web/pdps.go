@@ -8,76 +8,14 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
-	"strings"
-	"time"
 )
 
-type Context struct {
-	PDPService        KeepIT.PDPService
-	User              KeepIT.Person
-	ResponsibleForAll bool
-	PersonService     KeepIT.PersonService
-}
-
-func SetPDPService(serviceProvider func() KeepIT.PDPService) func(*Context, web.ResponseWriter, *web.Request, web.NextMiddlewareFunc) {
-	return func(c *Context, rw web.ResponseWriter, req *web.Request, next web.NextMiddlewareFunc) {
-		c.PDPService = serviceProvider()
-		next(rw, req)
-		c.PDPService.Destroy()
-	}
-}
-
-func SetPersonService(serviceProvider func() KeepIT.PersonService) func(*Context, web.ResponseWriter, *web.Request, web.NextMiddlewareFunc) {
-	return func(c *Context, rw web.ResponseWriter, req *web.Request, next web.NextMiddlewareFunc) {
-		c.PersonService = serviceProvider()
-		next(rw, req)
-		c.PersonService.Destroy()
-	}
-}
-
-func (c *Context) Auth(rw web.ResponseWriter, req *web.Request, next web.NextMiddlewareFunc) {
-	c.User = KeepIT.Person{
-		Cid: "svenel", // FIXME
-	}
-
-	next(rw, req)
-}
-
-func (c *Context) PopulateUser(rw web.ResponseWriter, req *web.Request, next web.NextMiddlewareFunc) {
-	charirmanGroups, err := c.PersonService.GroupsWithChairman(c.User)
-	if err != nil {
-		fmt.Println(err)
-		rw.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	c.User.ChairmanIn = charirmanGroups
-
-	groups, err := c.PersonService.Groups(c.User)
-	if err != nil {
-		fmt.Println(err)
-		rw.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	c.User.Groups = groups
-
-	for _, group := range c.User.Groups {
-		if group == "styrit" || group == "dpo" {
-			c.ResponsibleForAll = true
-			break
-		}
-	}
-
-	next(rw, req)
-}
-
-func (c *Context) Cors(rw web.ResponseWriter, req *web.Request, next web.NextMiddlewareFunc) {
-	rw.Header().Add("Access-Control-Allow-Origin", "*")
-	next(rw, req)
-}
-
-// Request responses
 func (c *Context) ListPDP(rw web.ResponseWriter, req *web.Request) {
-	var result Result
+	var result struct {
+		Active   []KeepIT.PDP `json:"active"`
+		Inactive []KeepIT.PDP `json:"inactive"`
+		Deleted  []KeepIT.PDP `json:"deleted"`
+	}
 	var err error
 
 	if c.ResponsibleForAll {
@@ -216,8 +154,6 @@ func (c *Context) CreatePDP(rw web.ResponseWriter, req *web.Request) {
 		return
 	}
 
-	// check times? TODO
-
 	id, err := c.PDPService.Create(n)
 	if err != nil {
 		fmt.Println(err)
@@ -228,7 +164,6 @@ func (c *Context) CreatePDP(rw web.ResponseWriter, req *web.Request) {
 	rw.WriteHeader(http.StatusCreated)
 	fmt.Fprintf(rw, "{id:%d}", id)
 }
-
 func validateCreate(pdp KeepIT.PDP) []string {
 	var faults []string
 	if pdp.Title == "" {
@@ -319,9 +254,9 @@ func validateUpdate(n KeepIT.PDP, old KeepIT.PDP) []string {
 	if n.End.Before(n.Start) {
 		faults = append(faults, "Ends before it starts")
 	}
-	if time.Now().After(old.Start) { // Maybe remove this? TODO
+	/* if time.Now().After(old.Start) { // Removed because we have history
 		if n.End.After(old.End) {
-			faults = append(faults, "Can't keep data for longer that specified at stsart of collection")
+			faults = append(faults, "Can't keep data for longer that specified at start of collection")
 		}
 		if !n.Start.Equal(old.Start) {
 			faults = append(faults, "A passed start date cannot be moved")
@@ -335,10 +270,10 @@ func validateUpdate(n KeepIT.PDP, old KeepIT.PDP) []string {
 		if n.TargetGroup == "Committee members" && (old.TargetGroup == "Everyone" || old.TargetGroup == "Fkit members") {
 			faults = append(faults, "You cant make the target group narrower after the collection has started")
 		}
-	}
-	if time.Now().After(old.End) {
+	} */
+	/* if time.Now().After(old.End) {
 		faults = append(faults, "Can't change a pdp that has expired")
-	}
+	} */
 	return faults
 }
 
@@ -434,9 +369,4 @@ func (c *Context) ListPDPHistory(rw web.ResponseWriter, req *web.Request) {
 	}
 	rw.WriteHeader(http.StatusOK)
 	rw.Write(data)
-}
-
-func (c *Context) OptionsHandler(rw web.ResponseWriter, r *web.Request, methods []string) {
-	rw.Header().Add("Access-Control-Allow-Methods", strings.Join(methods, ", "))
-	rw.Header().Add("Access-Control-Allow-Origin", "*")
 }
