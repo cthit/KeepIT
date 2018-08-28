@@ -1,9 +1,9 @@
 package main
 
 import (
-	"../database"
-	"../ldap"
-	"../web"
+	"github.com/cthit/KeepIT/backend/database"
+	"github.com/cthit/KeepIT/backend/ldap"
+	"github.com/cthit/KeepIT/backend/web"
 	"log"
 	"net/http"
 )
