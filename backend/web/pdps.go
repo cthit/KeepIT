@@ -1,7 +1,7 @@
 package web
 
 import (
-	"../../KeepIT"
+	"github.com/cthit/KeepIT/backend"
 	"encoding/json"
 	"fmt"
 	"github.com/gocraft/web"

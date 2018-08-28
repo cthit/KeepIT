@@ -1,7 +1,7 @@
 package web
 
 import (
-	"../../KeepIT"
+	"github.com/cthit/KeepIT/backend"
 	"encoding/json"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
@@ -112,9 +112,16 @@ func (c *Context) Login(rw web.ResponseWriter, req *web.Request) {
 
 	mySigningKey := []byte("MY JWT SECRET") // TODO
 
+	mePerson, err := c.PersonService.Person(meResult.Cid)
+	if err != nil {
+		fmt.Println(err)
+		rw.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
 	// Create the Claims
 	claims := keepITClaims{
-		User: c.PersonService.Person(meResult.Cid),
+		User: mePerson,
 		StandardClaims: jwt.StandardClaims{
 			Audience:  "digit.KeepIT",
 			ExpiresAt: time.Now().Add(time.Hour).Unix(),
