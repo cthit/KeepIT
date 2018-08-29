@@ -1,3 +1,3 @@
-import App from "App"
+import App from "./App.js"
 
-export const App
+export default App

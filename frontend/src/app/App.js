@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
-import "./App.css";
 import {
   DigitProviders,
   DigitNavLink,
   DigitNavigation
 } from "@cthit/react-digit-components";
+import ListPuh from '../use-cases/list-puh'
 
 class App extends Component {
   render() {
@@ -14,13 +13,14 @@ class App extends Component {
         <DigitNavigation
           title="KeepIT"
           renderMain={() => (
-            <div>
-              <h1>hej</h1>
-            </div>
+            <ListPuh />
           )}
           renderDrawer={() => (
             <div>
-              <DigitNavLink link="/" text="Test" />
+              <DigitNavLink link="/" text="digit" />
+              <DigitNavLink link="/" text="prit" />
+              <DigitNavLink link="/" text="styrit" />
+              <DigitNavLink link="/" text="drawit" />
             </div>
           )}
         />
