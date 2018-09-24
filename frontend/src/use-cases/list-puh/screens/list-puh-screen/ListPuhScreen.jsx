@@ -1,15 +1,16 @@
 import React from 'react'
 import ListPuhView from './views/list-puh-view'
-import Space from "../../../../common-ui/views/space"
-import Padding from "../../../../common-ui/views/padding"
-import { DigitDesign } from "@cthit/react-digit-components"
 import DetailsPuhView from "./views/details-puh-view"
+import { Space, FillContainer, VR } from "./ListPuhScreen.styles"
+import HorizontalSpacing from "../../../../common-ui/views/horizontal-spacing"
 
 export const ListPuhScreen = () =>
-    <Space>
-        <ListPuhView />
-        <Padding>
-            <DigitDesign.Card text="Derp" absWidth="5px" absHeight="100vh" />
-        </Padding>
-        <DetailsPuhView/>
-    </Space>
+    <HorizontalSpacing>
+        <FillContainer>
+            <ListPuhView />
+        </FillContainer>
+        <Space />
+        <FillContainer>
+            <DetailsPuhView />
+        </FillContainer>
+    </HorizontalSpacing>

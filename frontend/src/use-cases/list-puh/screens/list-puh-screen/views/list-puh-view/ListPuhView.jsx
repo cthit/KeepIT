@@ -1,10 +1,28 @@
 import React from "react";
 import ListPuhElementView from "../list-puh-element-view";
-import { DigitLayout } from "@cthit/react-digit-components";
+import { ScrollView } from "./ListPuhView.styles"
 
 export const ListPuhView = () => (
-  <DigitLayout.Padding>
+  <ScrollView>
     <ListPuhElementView />
     <ListPuhElementView />
-  </DigitLayout.Padding>
+    <ListPuhElementView />
+    <ListPuhElementView />
+    <ListPuhElementView />
+    <ListPuhElementView />
+    <ListPuhElementView />
+    <ListPuhElementView />
+    <ListPuhElementView />
+    <ListPuhElementView />
+    <ListPuhElementView />
+    <ListPuhElementView />
+    <ListPuhElementView />
+    <ListPuhElementView />
+    <ListPuhElementView />
+    <ListPuhElementView />
+    <ListPuhElementView />
+    <ListPuhElementView />
+    <ListPuhElementView />
+    <ListPuhElementView />
+  </ScrollView>
 );
