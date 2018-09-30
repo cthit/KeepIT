@@ -14,3 +14,8 @@ export const VR = styled.div`
     height: 100%; 
     width: 1px;
 `
+
+export const ListPuhScreenContainer = styled.div`
+    margin: 10px;
+    margin-bottom: 0px;
+`
