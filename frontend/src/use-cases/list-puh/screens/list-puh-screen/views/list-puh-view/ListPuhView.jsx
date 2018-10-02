@@ -1,6 +1,10 @@
 import React from "react";
-import { DigitDesign } from "@cthit/react-digit-components";
+import ListPuhElementView from "../list-puh-element-view";
+import { DigitLayout } from "@cthit/react-digit-components";
 
 export const ListPuhView = () => (
-  <DigitDesign.Card absWidth="200px" absHeight="200px" />
+  <DigitLayout.Padding>
+    <ListPuhElementView />
+    <ListPuhElementView />
+  </DigitLayout.Padding>
 );
