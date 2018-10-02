@@ -1,3 +1,4 @@
+clear
 import React, { Component } from "react";
 import { DigitProviders, DigitHeader } from "@cthit/react-digit-components";
 import ListPuh from "../use-cases/list-puh";
@@ -8,19 +9,18 @@ import AddPuh from "../use-cases/add-puh";
 class App extends Component {
   render() {
     return (
-      <DigitProviders rootReducer={{}}>
+      <DigitProviders>
         <div>
           <DigitHeader
             title="KeepIT"
-            renderMain={() => 
-              <Switch>
-                <Route path="/add" component={AddPuh}/>
-                <Route path="/" component={ListPuh}/>
-              </Switch>
-            }
+            renderMain={() => component}
             renderDrawer={() => <DrawerView />}
           />
 
+          <Switch>
+            <Route path="/" component={ListPuh}/>
+            <Route path="/add" component={AddPuh}/>
+          </Switch>
         </div>
       </DigitProviders>
     );
