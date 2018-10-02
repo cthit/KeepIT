@@ -33,9 +33,6 @@ export const DetailsPuhView = () => (
                     <DigitText.Text text="Target group: All section members"/>
                     <DigitText.Text text="Last edited on: 2013-05-23 18:25:43"/>
                 </Indent>
-                <DigitLayout.Row rightAlign>
-                    <IconButton><EditIcon/></IconButton>
-                </DigitLayout.Row>
             </Padding>
         </DigitDesign.Card>
     </DetailsPuhViewContainer>
