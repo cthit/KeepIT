@@ -16,7 +16,28 @@ export function loadAllPdp() {
       .catch(error => {
         //TODO'
         console.log(error);
-        dispatch(loadAllPdpFailed(error));
+        dispatch(
+          loadAllPdpSuccessfully({
+            active: [
+              {
+                id: "123",
+                title: "CMd - Sittning anmälan",
+                start: "2018-01-01"
+              },
+              {
+                id: "1337",
+                title: "Lol digIT har sittning",
+                start: "2018-05-02"
+              },
+              {
+                id: "1233321",
+                title: "P.R.I.T. pubrunda data",
+                start: "2018-43-234"
+              }
+            ]
+          })
+        );
+        // dispatch(loadAllPdpFailed(error));
       });
   };
 }

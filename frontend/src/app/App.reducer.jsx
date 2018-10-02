@@ -1,6 +1,11 @@
 import { LOAD_ALL_PDP_SUCCESSFULLY, LOAD_ALL_PDP_FAILED } from "./App.actions";
 
-export function pdp(state = {}, action) {
+export function pdp(
+  state = {
+    active: []
+  },
+  action
+) {
   switch (action.type) {
     case LOAD_ALL_PDP_SUCCESSFULLY:
       return {

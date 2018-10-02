@@ -1,28 +1,13 @@
 import React from "react";
 import ListPuhElementView from "../list-puh-element-view";
-import { ScrollView } from "./ListPuhView.styles"
+import { ScrollView } from "./ListPuhView.styles";
 
-export const ListPuhView = () => (
+const ListPuhView = ({ active }) => (
   <ScrollView>
-    <ListPuhElementView />
-    <ListPuhElementView />
-    <ListPuhElementView />
-    <ListPuhElementView />
-    <ListPuhElementView />
-    <ListPuhElementView />
-    <ListPuhElementView />
-    <ListPuhElementView />
-    <ListPuhElementView />
-    <ListPuhElementView />
-    <ListPuhElementView />
-    <ListPuhElementView />
-    <ListPuhElementView />
-    <ListPuhElementView />
-    <ListPuhElementView />
-    <ListPuhElementView />
-    <ListPuhElementView />
-    <ListPuhElementView />
-    <ListPuhElementView />
-    <ListPuhElementView />
+    {active.map(data => (
+      <ListPuhElementView data={data} />
+    ))}
   </ScrollView>
 );
+
+export default ListPuhView;

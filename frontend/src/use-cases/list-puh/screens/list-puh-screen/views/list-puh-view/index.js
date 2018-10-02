@@ -1,3 +1,3 @@
-import { ListPuhView } from './ListPuhView'
+import ListPuhView from "./ListPuh.view.container";
 
 export default ListPuhView;
