@@ -14,6 +14,7 @@ export const DrawerView = () => (
     <DigitNavLink link="/" text="prit" />
     <DigitNavLink link="/" text="styrit" />
     <DigitNavLink link="/" text="drawit" />
+    <DigitNavLink link="/add" text="add" />
   </div>
 );
 

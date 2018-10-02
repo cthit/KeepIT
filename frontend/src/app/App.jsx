@@ -1,17 +1,25 @@
 import React, { Component } from "react";
 import { DigitProviders, DigitHeader } from "@cthit/react-digit-components";
-import AddPuh from "../use-cases/add-puh";
+import ListPuh from "../use-cases/list-puh";
 import DrawerView from "../common/views/drawerView";
+import { Switch, Route } from "react-router-dom"
 
 class App extends Component {
   render() {
     return (
       <DigitProviders>
-        <DigitHeader
-          title="KeepIT"
-          renderMain={() => <AddPuh />}
-          renderDrawer={() => <DrawerView />}
-        />
+        <div>
+          <DigitHeader
+            title="KeepIT"
+            renderMain={() => <ListPuh />}
+            renderDrawer={() => <DrawerView />}
+          />
+
+          <Switch>
+            <Route path="/" component={ListPuh}/>
+            <Route path="/add" component={ListPuh}/>
+          </Switch>
+        </div>
       </DigitProviders>
     );
   }
