@@ -3,7 +3,7 @@ import App from "./App";
 import { loadAllPdp } from "./App.action-creator";
 
 const mapStateToProps = (state, ownProps) => ({
-  failedLoadingPdp: state.pdp.failedLoadingPdp
+  failedLoadingPdp: state.failedLoadingPdp
 });
 
 const mapDispatchToProps = dispatch => ({

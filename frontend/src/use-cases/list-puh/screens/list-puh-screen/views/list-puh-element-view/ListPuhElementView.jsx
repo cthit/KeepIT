@@ -2,8 +2,7 @@ import React from "react";
 import {
   DigitDesign,
   DigitText,
-  DigitButton,
-  DigitLayout
+  DigitButton
 } from "@cthit/react-digit-components";
 import {
   ListPuhElementViewSpacing,

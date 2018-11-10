@@ -3,11 +3,10 @@ import ReactDOM from "react-dom";
 import App from "./app";
 import registerServiceWorker from "./registerServiceWorker";
 import { DigitProviders } from "@cthit/react-digit-components";
-import { combineReducers } from "redux";
-import { pdp } from "./app/App.reducer";
+import { rootReducer } from "./app/App.reducer";
 
 ReactDOM.render(
-  <DigitProviders rootReducer={{ pdp: pdp }}>
+  <DigitProviders rootReducer={{ root: rootReducer }}>
     <App />
   </DigitProviders>,
   document.getElementById("root")

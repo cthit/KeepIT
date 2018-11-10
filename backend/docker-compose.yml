@@ -1,0 +1,24 @@
+version: "2"
+
+services:
+    db:
+        image: mariadb
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: 123abc
+            MYSQL_DATABASE: structure
+            MYSQL_USER: keepit
+            MYSQL_PASSWORD: 123abc
+        ports:
+            - 8091:3306
+        volumes:
+            - ./database-data:/var/lib/mysql
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        environment:
+            PMA_HOST: db
+            PMA_PORT: 3306
+            PMA_USER: root
+            PMA_PASSWORD: 123abc
+        ports:
+            - 8092:80

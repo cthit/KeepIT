@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Värd: db
--- Tid vid skapande: 13 maj 2018 kl 21:29
+-- Tid vid skapande: 11 okt 2018 kl 13:44
 -- Serverversion: 10.2.13-MariaDB-10.2.13+maria~jessie
 -- PHP-version: 7.2.2
 
@@ -29,20 +29,11 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `pdps` (
-  `id` int(11) NOT NULL,
+  `pdp_id` int(11) NOT NULL,
   `committee` varchar(255) NOT NULL,
   `creator` varchar(255) NOT NULL,
   `removed` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Ersättningsstruktur för vy `pdp_latest`
--- (See below for the actual view)
---
--- CREATE TABLE `pdp_latest` (
--- );
 
 -- --------------------------------------------------------
 
@@ -53,10 +44,12 @@ CREATE TABLE `pdps` (
 CREATE TABLE `pdp_versions` (
   `pdp_id` int(11) NOT NULL,
   `version_id` int(11) NOT NULL DEFAULT 0,
-  `start` datetime NOT NULL,
-  `end` datetime NOT NULL,
-  `sensitive` tinyint(1) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `eula` text NOT NULL,
   `target_group` enum('Everyone','All section members','Fkit members','Committee members') NOT NULL,
+  `sensitive` tinyint(1) NOT NULL,
+  `start` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `end` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `last_changed` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -66,19 +59,11 @@ CREATE TABLE `pdp_versions` (
 DELIMITER $$
 CREATE TRIGGER `version_id` BEFORE INSERT ON `pdp_versions` FOR EACH ROW BEGIN
 	DECLARE max_id INT(11);
-    SELECT version_id FROM `pdp_versions` WHERE `pdp_id` = NEW.pdp_id INTO max_id;
+    SELECT MAX(version_id) FROM `pdp_versions` WHERE `pdp_id` = NEW.pdp_id INTO max_id;
     SET NEW.version_id = IF(ISNULL(max_id), 0, max_id + 1);
 END
 $$
 DELIMITER ;
-
--- --------------------------------------------------------
-
---
--- Struktur för vy `pdp_latest`
---
--- DROP TABLE IF EXISTS `pdp_latest`;
--- Error reading structure for table keepit.pdp_latest: #1046 - Ingen databas i användning
 
 --
 -- Index för dumpade tabeller
@@ -88,7 +73,7 @@ DELIMITER ;
 -- Index för tabell `pdps`
 --
 ALTER TABLE `pdps`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`pdp_id`);
 
 --
 -- Index för tabell `pdp_versions`
@@ -104,7 +89,7 @@ ALTER TABLE `pdp_versions`
 -- AUTO_INCREMENT för tabell `pdps`
 --
 ALTER TABLE `pdps`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `pdp_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

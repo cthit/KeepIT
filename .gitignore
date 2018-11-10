@@ -1,1 +1,3 @@
 .idea
+backend/cmd/server.go
+backend/database-data
