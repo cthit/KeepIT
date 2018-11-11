@@ -11,9 +11,9 @@ import (
 func main() {
 	web.DEBUG = true
 
-	personServiceCreator := ldap.NewPersonServiceCreator("ldap.chalmers.it:636", "chalmers.it", "cn=digit,dc=chalmers,dc=it", "password")
+	personServiceCreator := ldap.NewPersonServiceCreator("ldap.chalmers.it:636", "chalmers.it", "cn=digit,dc=chalmers,dc=it", "brunnslock tuxenborg olydnad yay")
 
-	connection := database.NewDatabaseConnection("mysql", "root:123abc@tcp(localhost)/keepit?parseTime=true")
+	connection := database.NewDatabaseConnection("mysql", "root:123abc@tcp(localhost:8091)/keepit?parseTime=true")
 	defer connection.Close()
 
 	log.Fatal(http.ListenAndServe(":8081", web.Router(database.NewPDPServiceCreator(connection), personServiceCreator)))

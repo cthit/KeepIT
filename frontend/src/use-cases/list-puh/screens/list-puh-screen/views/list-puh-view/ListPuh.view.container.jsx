@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import ListPuhView from "./ListPuhView";
+import ListPuhView from "./ListPuh.view";
 
 const mapStateToProps = (state, ownProps) => ({
   active: state.root.pdp.active

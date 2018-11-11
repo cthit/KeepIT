@@ -54,7 +54,7 @@ export function loadAllPdp() {
                 end: "2018-12-11",
                 eula: "SOME MORE DATA STUFF! :",
                 sensitive: true,
-                targetGroup: "Dem didIT boi",
+                targetGroup: "Dem didIT bois",
                 lastEdit: "2018-09-10",
                 chairman: {
                   cid: "angergard",

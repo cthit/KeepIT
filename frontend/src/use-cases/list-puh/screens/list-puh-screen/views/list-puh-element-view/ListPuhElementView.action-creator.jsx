@@ -1,9 +1,9 @@
-import { DELETE_PDP, SELECT_PDP } from "./ListPuhElementsView.actions.jsx";
+import { DELETE_PDP, SELECT_PDP } from "./ListPuhElementView.actions.jsx";
 
-export function changeSelectedPDP(pdpToDelete) {
+export function selectPdp(pdpToSelect) {
   return {
     type: SELECT_PDP,
-    pdpToDelete
+    pdpToSelect
   };
 }
 

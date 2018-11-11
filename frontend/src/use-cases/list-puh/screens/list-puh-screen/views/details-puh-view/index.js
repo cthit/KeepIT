@@ -1,3 +1,3 @@
-import { DetailsPuhView } from "./DetailsPuhView"
+import DetailsPuhView from "./DetailsPuh.view.container";
 
 export default DetailsPuhView;

@@ -1,6 +1,6 @@
 import React from "react";
 import ListPuhElementView from "../list-puh-element-view";
-import { ScrollView } from "./ListPuhView.styles";
+import { ScrollView } from "./ListPuh.view.styles";
 
 const ListPuhView = ({ active }) => (
   <ScrollView>
@@ -9,5 +9,4 @@ const ListPuhView = ({ active }) => (
     ))}
   </ScrollView>
 );
-
 export default ListPuhView;

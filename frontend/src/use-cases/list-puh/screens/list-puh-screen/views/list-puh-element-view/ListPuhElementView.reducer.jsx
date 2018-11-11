@@ -1,6 +1,22 @@
 import { SELECT_PDP, DELETE_PDP } from "./ListPuhElementView.actions";
 
-export const pdpListElement = (state = {}, action) => {
+const initialState = {
+  selectedPdp: {
+    creator: {
+      cid: "Please select Pdp!",
+      nick: "Please select Pdp!",
+      mail: "Please select Pdp!"
+    },
+    sensitive: false,
+    chairman: {
+      cid: "Please select Pdp!",
+      nick: "Please select Pdp!",
+      mail: "Please select Pdp!"
+    }
+  }
+};
+
+export const pdpListElement = (state = initialState, action) => {
   switch (action.type) {
     case SELECT_PDP:
       return Object.assign({}, state, { selectedPdp: action.pdpToSelect });
