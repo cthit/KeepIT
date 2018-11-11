@@ -1,41 +1,32 @@
 import React from "react";
+import { DigitText, DigitCheckbox } from "@cthit/react-digit-components";
 import {
-  DigitDesign,
-  DigitText,
-  DigitButton
-} from "@cthit/react-digit-components";
-import {
-  ListPuhElementViewSpacing,
-  ListPuhElementViewMargin
+  StyledListItem,
+  Horizontal,
+  VerticalCenter
 } from "./ListPuhElementView.styles";
 import HorizontalSpacing from "../../../../../../common-ui/views/horizontal-spacing";
-import DeleteIcon from "@material-ui/icons/Delete";
-import IconButton from "@material-ui/core/IconButton";
+import ListItem from "@material-ui/core/ListItem";
 
 export const ListPuhElementView = props => (
   <div>
-    <DigitDesign.Card absHeight="100px">
-      <ListPuhElementViewMargin>
-        <HorizontalSpacing>
-          <DigitText.Heading text={props.info.data.title} />
-          <DigitText.Heading text={props.info.data.start} />
-        </HorizontalSpacing>
-        <HorizontalSpacing>
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
-          <DigitButton
-            text="Details"
-            onClick={() => {
-              props.selectPdp(props.data);
-            }}
-            primary
-            raised
-          />
-        </HorizontalSpacing>
-      </ListPuhElementViewMargin>
-    </DigitDesign.Card>
-    <ListPuhElementViewSpacing />
+    <StyledListItem
+      buttonx
+      selected={props.current.data.id === props.selected.id}
+      onClick={() => {
+        props.selectPdp(props.data);
+      }}
+    >
+      <HorizontalSpacing>
+        <Horizontal>
+          <DigitCheckbox primary />
+          <VerticalCenter>
+            <DigitText.Subtitle text={props.current.data.title} />
+          </VerticalCenter>
+        </Horizontal>
+        <DigitText.Text text={props.current.data.start} />
+      </HorizontalSpacing>
+    </StyledListItem>
   </div>
 );
 

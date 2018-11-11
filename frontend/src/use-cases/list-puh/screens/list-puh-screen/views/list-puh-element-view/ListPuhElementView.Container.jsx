@@ -3,7 +3,8 @@ import ListPuhElementView from "./ListPuhElementView";
 import { selectPdp } from "./ListPuhElementView.action-creator";
 
 const mapStateToProps = (state, ownProps) => ({
-  info: ownProps
+  current: ownProps,
+  selected: state.root.pdpListElement.selectedPdp
 });
 
 const mapDispatchToProps = {

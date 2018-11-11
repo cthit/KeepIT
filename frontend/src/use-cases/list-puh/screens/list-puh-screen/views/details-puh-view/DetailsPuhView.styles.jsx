@@ -10,4 +10,6 @@ export const SensitiveText = styled.p`
   font-weight: bold;
 `;
 
-export const DetailsPuhViewContainer = styled.div``;
+export const DetailsPuhViewContainer = styled.div`
+  margin-right: 10px;
+`;

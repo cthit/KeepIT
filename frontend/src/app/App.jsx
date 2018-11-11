@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { DigitProviders, DigitHeader } from "@cthit/react-digit-components";
+import { DigitHeader } from "@cthit/react-digit-components";
 import ListPuh from "../use-cases/list-puh";
 import DrawerView from "../common/views/drawerView";
 import { Switch, Route } from "react-router-dom";
@@ -18,6 +18,7 @@ class App extends Component {
       <div>
         {failedLoadingPdp}
         <DigitHeader
+          dense
           title="KeepIT"
           renderMain={() => (
             <Switch>
