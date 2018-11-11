@@ -2,6 +2,7 @@ import { SELECT_PDP, DELETE_PDP } from "./ListPuhElementView.actions";
 
 const initialState = {
   selectedPdp: {
+    exists: false,
     creator: {
       cid: "Please select Pdp!",
       nick: "Please select Pdp!",
@@ -19,7 +20,9 @@ const initialState = {
 export const pdpListElement = (state = initialState, action) => {
   switch (action.type) {
     case SELECT_PDP:
-      return Object.assign({}, state, { selectedPdp: action.pdpToSelect });
+      return Object.assign({}, state, {
+        selectedPdp: Object.assign({}, action.pdpToSelect, { exists: true })
+      });
     case DELETE_PDP:
       return state;
     default:

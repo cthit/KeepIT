@@ -18,7 +18,7 @@ export const DetailsPuhView = ({ selected }) => (
     <DigitDesign.Card>
       <Padding>
         <DigitLayout.Center>
-          <DigitText.Heading text={selected.title} />
+          <DigitText.Title text={selected.title} />
         </DigitLayout.Center>
         <DigitIfElseRendering
           test={selected.sensitive}
