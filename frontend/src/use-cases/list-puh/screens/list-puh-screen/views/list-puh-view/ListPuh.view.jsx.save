@@ -1,0 +1,21 @@
+O2RAimport React from "react";
+import ListPuhElementView from "../list-puh-element-view";
+import { ScrollView } from "./ListPuh.view.styles";
+import List from "@material-ui/core/List";
+
+const ListPuhView = ({ active }) => (
+  <List component="nav">
+    {for (index = 0; index < active.length; index++) {
+      <ListPuhElementView data={active[index]} />
+    }}
+  </List>
+  
+  /*
+  <ScrollView>
+    {active.map(data => (
+      <ListPuhElementView data={data} />
+    ))}
+  </ScrollView>
+  */
+);
+export default ListPuhView;

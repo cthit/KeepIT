@@ -8,7 +8,7 @@ import {
 export const DrawerView = () => (
   <div>
     <DigitLayout.Padding>
-      <DigitButton text="New Puh" raised primary />
+      <DigitButton text="new pdp" raised primary />
     </DigitLayout.Padding>
     <DigitNavLink link="/" text="digit" />
     <DigitNavLink link="/" text="prit" />
