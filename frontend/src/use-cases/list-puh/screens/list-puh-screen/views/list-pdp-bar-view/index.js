@@ -1,3 +1,3 @@
-import ListPdpBar from "./ListPdpBar.view";
+import ListPdpBar from "./ListPdpBar.view.container";
 
 export default ListPdpBar;
