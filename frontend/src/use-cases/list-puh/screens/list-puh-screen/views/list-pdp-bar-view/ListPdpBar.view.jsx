@@ -1,25 +1,28 @@
 import React from "react";
 import HorizontalSpacing from "../../../../../../common-ui/views/horizontal-spacing";
-import { DigitSelect } from "@cthit/react-digit-components";
+import { Select } from "@material-ui/core";
+import {
+  SortFilterContainer,
+  StyledListPdpBar,
+  HorizontalLine
+} from "./ListPdpBar.view.styles";
 
 const ListPdpBar = barState => (
-  <HorizontalSpacing>
-    <h2>Hai!</h2>
-
-    <DigitSelect
-      filled
-      upperLabel="This is a upperlabel"
-      value={barState.sortOrder}
-      onChange={e => {
-        barState.changeSortOrder(e);
-      }}
-      valueToTextMap={{
-        chocolate: "Chocolate",
-        vanilla: "Vanilla"
-      }}
-    />
-    <h1>Hi</h1>
-  </HorizontalSpacing>
+  <div>
+    <HorizontalSpacing>
+      <StyledListPdpBar>
+        <Select
+          filled
+          upperLabel="This is a upperlabel"
+          value={barState.sortOrder}
+          onChange={e => {
+            barState.changeSortOrder(e);
+          }}
+        />
+      </StyledListPdpBar>
+    </HorizontalSpacing>
+    <HorizontalLine />
+  </div>
 );
 
 export default ListPdpBar;

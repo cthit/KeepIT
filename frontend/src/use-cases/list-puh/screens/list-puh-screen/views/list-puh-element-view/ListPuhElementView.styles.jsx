@@ -28,7 +28,7 @@ export const VerticalCenter = Styled.div`
 
 export const StyledListItem = withStyles({
   root: {
-    marginTop: "1px",
+    marginBottom: "1px",
     backgroundColor: "white"
   }
 })(ListItem);
