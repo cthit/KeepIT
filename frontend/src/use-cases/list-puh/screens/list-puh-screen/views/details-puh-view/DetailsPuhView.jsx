@@ -41,6 +41,7 @@ export const DetailsPuhView = ({ selected }) => (
         <DigitDesign.Divider />
         <Indent>
           <DigitText.Text text={"Created By: " + selected.creator.nick} />
+          <DigitText.Text text={"In committee: " + selected.committee} />
           <DigitText.Text text={"Chairman: " + selected.chairman.nick} />
           <DigitText.Text text={"Target group: " + selected.targetGroup} />
           <DigitText.Text text={"Last edited: " + selected.lastEdit} />

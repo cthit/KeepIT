@@ -1,13 +1,18 @@
 import { connect } from "react-redux";
 import ListPdpBar from "./ListPdpBar.view";
-import { changeSortOrder } from "./ListPdpBar.view.action-creator";
+import {
+  changeSortOrder,
+  committeeSelected
+} from "./ListPdpBar.view.action-creator";
 
-const mapStateToProps = (state) => ({
-    barState: state.root.listPdpBar
+const mapStateToProps = state => ({
+  barState: state.root.listPdpBar,
+  committees: state.root.pdp.committees
 });
 
 const mapDispatchToProps = {
-  changeSortOrder
+  changeSortOrder,
+  committeeSelected
 };
 
 export default connect(

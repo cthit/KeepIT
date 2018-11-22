@@ -6,7 +6,6 @@ import {
   VerticalCenter
 } from "./ListPuhElementView.styles";
 import HorizontalSpacing from "../../../../../../common-ui/views/horizontal-spacing";
-import ListItem from "@material-ui/core/ListItem";
 
 export const ListPuhElementView = props => (
   <div>

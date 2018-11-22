@@ -1,17 +1,18 @@
 import { LOAD_ALL_PDP_SUCCESSFULLY, LOAD_ALL_PDP_FAILED } from "./App.actions";
 import { combineReducers } from "redux";
 import { pdpListElement } from "../use-cases/list-puh/screens/list-puh-screen/views/list-puh-element-view/ListPuhElementView.reducer.jsx";
-import { changeSortOrder } from "../use-cases/list-puh/screens/list-puh-screen/views/list-pdp-bar-view/ListPdpBar.view.reducer"
+import { listPdpBar } from "../use-cases/list-puh/screens/list-puh-screen/views/list-pdp-bar-view/ListPdpBar.view.reducer";
 
 export const rootReducer = combineReducers({
   pdp,
   pdpListElement,
-  changeSortOrder
+  listPdpBar
 });
 
 export function pdp(
   state = {
-    active: []
+    active: [],
+    committees: []
   },
   action
 ) {
