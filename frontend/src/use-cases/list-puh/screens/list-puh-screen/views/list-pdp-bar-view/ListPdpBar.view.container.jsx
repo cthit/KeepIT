@@ -2,8 +2,8 @@ import { connect } from "react-redux";
 import ListPdpBar from "./ListPdpBar.view";
 import {
   changeSortOrder,
-  committeeSelected,
-  setSelectLabelWidth
+  showOnlySensitive,
+  committeeSelected
 } from "./ListPdpBar.view.action-creator";
 
 const mapStateToProps = state => ({
@@ -13,7 +13,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   changeSortOrder,
-  committeeSelected
+  committeeSelected,
+  showOnlySensitive
 };
 
 export default connect(

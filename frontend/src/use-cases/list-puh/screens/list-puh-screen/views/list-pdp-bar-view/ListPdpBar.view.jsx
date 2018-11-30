@@ -7,7 +7,11 @@ import {
   StyledFormControl,
   StyledInputLabel
 } from "./ListPdpBar.view.styles";
-import { DigitCheckbox, DigitMenuItem } from "@cthit/react-digit-components";
+import {
+  DigitCheckbox,
+  DigitSelect,
+  DigitSwitch
+} from "@cthit/react-digit-components";
 import {
   OutlinedInput,
   MenuItem,
@@ -16,6 +20,7 @@ import {
   InputLabel,
   FormControl
 } from "@material-ui/core";
+import { showOnlySensitive } from "./ListPdpBar.view.action-creator";
 
 const MenuProps = {
   PaperProps: {
@@ -51,29 +56,53 @@ const ListPdpBar = props => (
           >
             {props.committees.map(committee => (
               <MenuItem key={committee} value={committee}>
-                <Checkbox checked={getState(props, committee)} />
+                <Checkbox
+                  checked={
+                    props.barState.selectedCommittees.indexOf(committee) > -1
+                  }
+                />
                 <ListItemText primary={committee} />
               </MenuItem>
             ))}
           </StyledSelect>
         </StyledFormControl>
-        <StyledSelect
-          value={props.barState.sortOrder}
+        <StyledFormControl variant="outlined">
+          <StyledInputLabel htmlFor="committee-select">
+            Sort order
+          </StyledInputLabel>
+          <StyledSelect
+            onChange={e => {
+              props.changeSortOrder(e.target.value);
+            }}
+            input={
+              <OutlinedInput
+                labelWidth={"80"}
+                name="committee"
+                id="committee-select"
+              />
+            }
+            value={props.barState.sortOrder}
+            renderValue={() => props.barState.sortOrder}
+          >
+            {props.barState.sortOrders.map(sortOrder => (
+              <MenuItem key={sortOrder} value={sortOrder}>
+                <ListItemText primary={sortOrder} />
+              </MenuItem>
+            ))}
+          </StyledSelect>
+        </StyledFormControl>
+        <DigitSwitch
           onChange={e => {
-            props.barState.changeSortOrder(e);
+            props.showOnlySensitive(e.target.checked);
           }}
+          value={props.barState.showOnlySensitive}
+          primary
+          label="Show only sensitive"
         />
-        <DigitCheckbox onChange={e => {}} primary label="Show only sensitive" />
       </StyledListPdpBar>
     </HorizontalSpacing>
     <HorizontalLine />
   </div>
 );
-
-function getState(props, committee) {
-  console.log("getstate");
-  console.log(props);
-  return props.barState.selectedCommittees.indexOf(committee) > -1;
-}
 
 export default ListPdpBar;

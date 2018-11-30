@@ -14,11 +14,21 @@ export default connect(
 
 function getActiveWithFilter(state) {
   var selected = state.root.listPdpBar.selectedCommittees;
+  var showOnlySensitives = state.root.listPdpBar.showOnlySensitive;
+  var sortValues = state.root.listPdpbar;
   var active = state.root.pdp.active;
+
   if (selected.length > 0) {
     active = active.filter(function(el) {
       return selected.includes(el.committee);
     });
   }
+
+  if (showOnlySensitives) {
+    active = active.filter(function(el) {
+      return el.sensitive;
+    });
+  }
+
   return active;
 }
