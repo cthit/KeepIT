@@ -2,7 +2,8 @@ import { connect } from "react-redux";
 import ListPdpBar from "./ListPdpBar.view";
 import {
   changeSortOrder,
-  committeeSelected
+  committeeSelected,
+  setSelectLabelWidth
 } from "./ListPdpBar.view.action-creator";
 
 const mapStateToProps = state => ({

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Select } from "@material-ui/core";
+import { Select, FormControl, InputLabel } from "@material-ui/core";
 
 export const SortFilterContainer = styled.div``;
 
@@ -20,5 +20,16 @@ export const HorizontalLine = styled.div`
 export const StyledSelect = styled(Select)`
   flex-grow: 1;
   margin-right: 10px;
+  margin-left: 10px;
+`;
+
+export const StyledFormControl = styled(FormControl)`
+  flex-grow: 1;
+  margin-right: 10px;
+  margin-left: 10px;
+  minwidth: 120;
+`;
+
+export const StyledInputLabel = styled(InputLabel)`
   margin-left: 10px;
 `;

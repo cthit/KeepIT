@@ -3,10 +3,19 @@ import HorizontalSpacing from "../../../../../../common-ui/views/horizontal-spac
 import {
   StyledListPdpBar,
   HorizontalLine,
-  StyledSelect
+  StyledSelect,
+  StyledFormControl,
+  StyledInputLabel
 } from "./ListPdpBar.view.styles";
 import { DigitCheckbox, DigitMenuItem } from "@cthit/react-digit-components";
-import { Input, MenuItem, Checkbox, ListItemText } from "@material-ui/core";
+import {
+  OutlinedInput,
+  MenuItem,
+  Checkbox,
+  ListItemText,
+  InputLabel,
+  FormControl
+} from "@material-ui/core";
 
 const MenuProps = {
   PaperProps: {
@@ -21,26 +30,34 @@ const ListPdpBar = props => (
   <div>
     <HorizontalSpacing>
       <StyledListPdpBar>
+        <StyledFormControl variant="outlined">
+          <StyledInputLabel htmlFor="committee-select">
+            Committee
+          </StyledInputLabel>
+          <StyledSelect
+            multiple
+            onChange={e => {
+              props.committeeSelected(e.target.value);
+            }}
+            input={
+              <OutlinedInput
+                labelWidth={"90"}
+                name="committee"
+                id="committee-select"
+              />
+            }
+            value={props.barState.selectedCommittees}
+            renderValue={() => props.barState.selectedCommittees.join(", ")}
+          >
+            {props.committees.map(committee => (
+              <MenuItem key={committee} value={committee}>
+                <Checkbox checked={getState(props, committee)} />
+                <ListItemText primary={committee} />
+              </MenuItem>
+            ))}
+          </StyledSelect>
+        </StyledFormControl>
         <StyledSelect
-          filled
-          multiple
-          onChange={e => {
-            props.committeeSelected(e.target.value);
-          }}
-          input={<Input id="select-multiple-checkbox" />}
-          value={props.barState.selectedCommittees}
-          renderValue={() => props.barState.selectedCommittees.join(", ")}
-        >
-          {props.committees.map(committee => (
-            <MenuItem key={committee} value={committee}>
-              <Checkbox checked={getState(props, committee)} />
-              <ListItemText primary={committee} />
-            </MenuItem>
-          ))}
-        </StyledSelect>
-        <StyledSelect
-          multiple
-          filled
           value={props.barState.sortOrder}
           onChange={e => {
             props.barState.changeSortOrder(e);
