@@ -30,8 +30,8 @@ export const DetailsPuhView = ({ selected }) => (
         />
         <Indent>
           <HorizontalSpacing>
-            <DigitText.Text text={"From: " + selected.start} />
-            <DigitText.Text text={"To: " + selected.end} />
+            <DigitText.Text text={"From: " + formatDate(selected.start)} />
+            <DigitText.Text text={"To: " + formatDate(selected.end)} />
           </HorizontalSpacing>
         </Indent>
         <DigitDesign.Divider />
@@ -44,9 +44,17 @@ export const DetailsPuhView = ({ selected }) => (
           <DigitText.Text text={"In committee: " + selected.committee} />
           <DigitText.Text text={"Chairman: " + selected.chairman.nick} />
           <DigitText.Text text={"Target group: " + selected.targetGroup} />
-          <DigitText.Text text={"Last edited: " + selected.lastEdit} />
+          <DigitText.Text
+            text={"Last edited: " + formatDate(selected.lastEdit)}
+          />
         </Indent>
       </Padding>
     </DigitDesign.Card>
   </DetailsPuhViewContainer>
 );
+
+function formatDate(date) {
+  return (
+    date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
+  );
+}

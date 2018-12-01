@@ -23,7 +23,7 @@ export const ListPuhElementView = props => (
             <DigitText.Subtitle text={props.current.data.title} />
           </VerticalCenter>
         </Horizontal>
-        <DigitText.Text text={props.current.data.start} />
+        <DigitText.Text text={props.formatDate(props.current.data.start)} />
       </HorizontalSpacing>
     </StyledListItem>
   </div>

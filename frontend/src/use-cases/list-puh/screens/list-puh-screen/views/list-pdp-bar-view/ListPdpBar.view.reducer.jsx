@@ -12,8 +12,6 @@ const initialState = {
 };
 
 export const listPdpBar = (state = initialState, action) => {
-  console.log("Heres da action: ");
-  console.log(action);
   switch (action.type) {
     case CHANGE_SORT_ORDER:
       return Object.assign({}, state, (state.sortOrder = action.newSortOrder));

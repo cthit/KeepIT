@@ -7,29 +7,13 @@ import {
   StyledFormControl,
   StyledInputLabel
 } from "./ListPdpBar.view.styles";
-import {
-  DigitCheckbox,
-  DigitSelect,
-  DigitSwitch
-} from "@cthit/react-digit-components";
+import { DigitSwitch } from "@cthit/react-digit-components";
 import {
   OutlinedInput,
   MenuItem,
   Checkbox,
-  ListItemText,
-  InputLabel,
-  FormControl
+  ListItemText
 } from "@material-ui/core";
-import { showOnlySensitive } from "./ListPdpBar.view.action-creator";
-
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: 48 * 4.5 + 8,
-      width: 250
-    }
-  }
-};
 
 const ListPdpBar = props => (
   <div>
