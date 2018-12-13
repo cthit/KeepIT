@@ -14,6 +14,8 @@ class App extends Component {
   render() {
     const { failedLoadingPdp } = this.props;
     console.log(failedLoadingPdp);
+    console.log("Window width: ");
+    console.log(window.innerWidth);
     return (
       <div>
         {failedLoadingPdp}
@@ -26,7 +28,7 @@ class App extends Component {
               <Route path="/" component={ListPuh} />
             </Switch>
           )}
-          renderDrawer={() => <DrawerView />}
+          renderDrawer={null}
         />
       </div>
     );

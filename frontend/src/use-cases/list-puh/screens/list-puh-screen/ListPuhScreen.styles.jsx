@@ -4,7 +4,12 @@ export const Space = styled.div`
   margin: 5px;
 `;
 
+export const BigSpace = styled.div`
+  margin: 10px;
+`;
+
 export const FillContainer = styled.div`
+  margin-right: 10px;
   flex: 1;
 `;
 
