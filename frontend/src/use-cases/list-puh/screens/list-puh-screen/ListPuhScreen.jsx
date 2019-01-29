@@ -8,7 +8,10 @@ import {
   ListPuhScreenContainer
 } from "./ListPuhScreen.styles";
 import HorizontalSpacing from "../../../../common-ui/views/horizontal-spacing";
-import { DigitIfElseRendering } from "@cthit/react-digit-components";
+import {
+  DigitIfElseRendering,
+  DigitLayout
+} from "@cthit/react-digit-components";
 
 export const ListPuhScreen = props => (
   <ListPuhScreenContainer>
