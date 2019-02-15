@@ -2,53 +2,38 @@ import React from "react";
 import ListPuhView from "./views/list-puh-view";
 import DetailsPuhView from "./views/details-puh-view";
 import {
-  Space,
-  BigSpace,
-  FillContainer,
-  ListPuhScreenContainer
+    BigSpace,
+    FillContainer,
+    ListPuhScreenContainer,
+    KeepITGridItem
 } from "./ListPuhScreen.styles";
-import HorizontalSpacing from "../../../../common-ui/views/horizontal-spacing";
-import {
-  DigitIfElseRendering,
-  DigitLayout
-} from "@cthit/react-digit-components";
+import { WindowContainer, KeepITGrid } from "./ListPuhScreen.styles";
+import { DigitIfElseRendering } from "@cthit/react-digit-components";
 
 export const ListPuhScreen = props => (
-  <ListPuhScreenContainer>
-    <DigitIfElseRendering
-      test={window.innerWidth <= 1200}
-      ifRender={() => (
-        <div>
-          <DigitIfElseRendering
-            test={props.selected.exists}
-            ifRender={() => <DetailsPuhView />}
-          />
-
-          <BigSpace />
-
-          <FillContainer>
-            <ListPuhView />
-          </FillContainer>
-        </div>
-      )}
-      elseRender={() => (
-        <HorizontalSpacing>
-          <FillContainer>
-            <ListPuhView />
-          </FillContainer>
-
-          <Space />
-
-          <DigitIfElseRendering
+    <ListPuhScreenContainer>
+        <DigitIfElseRendering
             test={props.selected.exists}
             ifRender={() => (
-              <FillContainer>
-                <DetailsPuhView />
-              </FillContainer>
+                <KeepITGrid>
+                    <KeepITGridItem>
+                        <DetailsPuhView />
+                    </KeepITGridItem>
+                    <KeepITGridItem>
+                        <FillContainer>
+                            <ListPuhView />
+                        </FillContainer>
+                    </KeepITGridItem>
+                </KeepITGrid>
             )}
-          />
-        </HorizontalSpacing>
-      )}
-    />
-  </ListPuhScreenContainer>
+            elseRender={() => (
+                <WindowContainer>
+                    <BigSpace />
+                    <FillContainer>
+                        <ListPuhView />
+                    </FillContainer>
+                </WindowContainer>
+            )}
+        />
+    </ListPuhScreenContainer>
 );

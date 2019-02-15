@@ -6,30 +6,24 @@ import {
   DigitTextArea,
   DigitTextField,
   DigitSelect,
-  DigitCheckbox
+  DigitCheckbox,
+  DigitDateAndTimePicker
 } from "@cthit/react-digit-components";
 import { AddPuhElementViewSpacing } from "./AddPuhElementView.styles";
 
-const AddPuhElementView = ({
-  title,
-  eula,
-  startDate,
-  endDate,
-  sensitivePDP,
-  targetGroup
-}) => (
+const AddPuhElementView = (props) => (
   <div>
     <DigitLayout.Center>
       <DigitEditData
         initialValues={{
-          title: title,
+          title: props.title,
           eula:
-            eula ||
+            props.eula ||
             "The data collected will be used to determine the space and inventory needed for the event. It will also be used to contact you in case of changes. The information will be shared with all members of <insert committee> and the sections DPO's in purpose of controlling complience.",
-          startDate: startDate || "2012-04-23T18:25:43.511Z",
-          endDate: endDate || "2012-04-23T18:25:43.511Z",
-          sensitivePDP: sensitivePDP || false,
-          targetGroup: targetGroup || "Hela IT-sektionen"
+          startDate: props.startDate || "2012-04-23T18:25:43.511Z",
+          endDate: props.endDate || "2012-04-23T18:25:43.511Z",
+          sensitivePDP: props.sensitivePDP || false,
+          targetGroup: props.targetGroup || "Hela IT-sektionen"
         }}
         onSubmit={values => {
           console.log(values);
@@ -67,13 +61,13 @@ const AddPuhElementView = ({
             }
           },
           startDate: {
-            component: DigitTextField,
+            component: DigitDateAndTimePicker,
             componentProps: {
               upperLabel: "Start Date"
             }
           },
           endDate: {
-            component: DigitTextField,
+            component: DigitDateAndTimePicker,
             componentProps: {
               upperLabel: "End Date"
             }
