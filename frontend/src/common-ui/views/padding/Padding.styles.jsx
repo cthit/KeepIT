@@ -1,5 +1,5 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 export const Padding = styled.div`
-    padding: 5px;   
-`
+  padding: 10px;
+`;

@@ -1,2 +1,37 @@
-CREATE VIEW `pdp_latest` AS
-(select `a`.`committee` AS `committee`,`a`.`creator` AS `creator`,`a`.`removed` AS `removed`,`c`.`title` AS `title`,`c`.`eula` AS `eula`,`c`.`pdp_id` AS `pdp_id`,`c`.`version_id` AS `version_id`,`c`.`start` AS `start`,`c`.`end` AS `end`,`c`.`sensitive` AS `sensitive`,`c`.`target_group` AS `target_group`,`c`.`last_changed` AS `last_changed` from ((`keepit`.`pdps` `a` join `keepit`.`pdp_versions` `c` on(`a`.`pdp_id` = `c`.`pdp_id`)) join (select `keepit`.`pdp_versions`.`pdp_id` AS `pdp_id`,max(`keepit`.`pdp_versions`.`version_id`) AS `latest` from `keepit`.`pdp_versions` group by `keepit`.`pdp_versions`.`pdp_id`) `b` on(`c`.`pdp_id` = `b`.`pdp_id` and `c`.`version_id` = `b`.`latest`)))
+CREATE VIEW `pdp_latest` AS(
+    SELECT
+        `a`.`committee` AS `committee`,
+        `a`.`creator` AS `creator`,
+        `a`.`removed` AS `removed`,
+        `c`.`title` AS `title`,
+        `c`.`eula` AS `eula`,
+        `c`.`pdp_id` AS `pdp_id`,
+        `c`.`version_id` AS `version_id`,
+        `c`.`start` AS `start`,
+        `c`.`end` AS `end`,
+        `c`.`sensitive` AS `sensitive`,
+        `c`.`target_group` AS `target_group`,
+        `c`.`last_changed` AS `last_changed`
+    FROM
+        (
+            (
+                `keepit`.`pdps` `a`
+            JOIN `keepit`.`pdp_versions` `c`
+            ON
+                (`a`.`pdp_id` = `c`.`pdp_id`)
+            )
+        JOIN(
+            SELECT
+                `keepit`.`pdp_versions`.`pdp_id` AS `pdp_id`,
+                MAX(`keepit`.`pdp_versions`.`version_id`) AS `latest`
+            FROM
+                `keepit`.`pdp_versions`
+            GROUP BY
+                `keepit`.`pdp_versions`.`pdp_id`
+        ) `b`
+    ON
+        (
+            `c`.`pdp_id` = `b`.`pdp_id` AND `c`.`version_id` = `b`.`latest`
+        )
+        )
+)

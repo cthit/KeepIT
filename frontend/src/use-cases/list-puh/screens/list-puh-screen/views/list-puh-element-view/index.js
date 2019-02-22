@@ -1,3 +1,3 @@
-import { ListPuhElementView } from "./ListPuhElementView";
+import ListPuhElementView from "./ListPuhElementView.Container";
 
 export default ListPuhElementView;

@@ -1,31 +1,39 @@
 import React, { Component } from "react";
-import { DigitProviders, DigitHeader } from "@cthit/react-digit-components";
+import { DigitHeader } from "@cthit/react-digit-components";
 import ListPuh from "../use-cases/list-puh";
-import DrawerView from "../common/views/drawerView";
-import { Switch, Route } from "react-router-dom"
+import { Switch, Route } from "react-router-dom";
 import AddPuh from "../use-cases/add-puh";
-import { RootReducer } from "./App.reducer"
+import HeaderButtons from "../common/views/headerButtonsView";
 
 class App extends Component {
-  render() {
-    return (
-      <DigitProviders rootReducer={RootReducer}>
-        <div>
-          <DigitHeader
-            title="KeepIT"
-            renderMain={() => 
-              <Switch>
-                <Route path="/add" component={AddPuh}/>
-                <Route path="/" component={ListPuh}/>
-              </Switch>
-            }
-            renderDrawer={() => <DrawerView />}
-          />
+    constructor(props) {
+        super();
+        props.loadAllPdp();
+    }
 
-        </div>
-      </DigitProviders>
-    );
-  }
+    render() {
+        const { failedLoadingPdp } = this.props;
+        console.log(failedLoadingPdp);
+        console.log("Window width: ");
+        console.log(window.innerWidth);
+        return (
+            <div>
+                {failedLoadingPdp}
+                <DigitHeader
+                    dense
+                    title="KeepIT"
+                    renderMain={() => (
+                        <Switch>
+                            <Route path="/add" component={AddPuh} />
+                            <Route path="/" component={ListPuh} />
+                        </Switch>
+                    )}
+                    renderDrawer={null}
+                    renderHeader={() => <HeaderButtons />}
+                />
+            </div>
+        );
+    }
 }
 
 export default App;
