@@ -19,31 +19,38 @@ const AddPuhElementView = props => (
                 initialValues={{
                     title: props.pdp.title,
                     eula: props.pdp.eula,
-                    startDate: props.pdp.start,
-                    endDate: props.pdp.end,
+                    start: props.pdp.start,
+                    end: props.pdp.end,
                     sensitivePDP: props.pdp.sensitivePDP,
                     targetGroup: props.pdp.targetGroup,
                     committee: props.pdp.committee
                 }}
                 onSubmit={(values, actions) => {
+                    values.committee = props.committees[values.committee];
+                    values.versionNumber = props.pdp.versionNumber;
+                    console.log("Submitting values :::::::");
                     console.log(values);
+                    props.addPdp(values);
                     actions.resetForm();
                 }}
                 validationSchema={yup.object().shape({
                     title: yup.string().required(),
                     eula: yup.string().required(),
-                    startDate: yup.string().required(),
-                    endDate: yup.string().required(),
+                    start: yup.string().required(),
+                    end: yup.string().required(),
                     sensitivePDP: yup.boolean().required(),
                     targetGroup: yup.string().required(),
-                    committee: yup.string().required()
+                    committee: yup
+                        .string()
+                        .min(1)
+                        .required()
                 })}
                 submitText={"Submit"}
                 keysOrder={[
                     "title",
                     "eula",
-                    "startDate",
-                    "endDate",
+                    "start",
+                    "end",
                     "sensitivePDP",
                     "targetGroup",
                     "committee"
@@ -61,13 +68,13 @@ const AddPuhElementView = props => (
                             upperLabel: "EULA"
                         }
                     },
-                    startDate: {
+                    start: {
                         component: DigitDateAndTimePicker,
                         componentProps: {
                             upperLabel: "Start Date"
                         }
                     },
-                    endDate: {
+                    end: {
                         component: DigitDateAndTimePicker,
                         componentProps: {
                             upperLabel: "End Date"

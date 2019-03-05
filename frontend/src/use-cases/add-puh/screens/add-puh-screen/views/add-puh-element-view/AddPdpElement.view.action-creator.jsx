@@ -1,15 +1,36 @@
-import { ADD_PDP, SAVE_IN_PROGRESS_PDP } from "./AddPdpElement.view.actions";
+import {
+    ADD_PDP,
+    SAVE_IN_PROGRESS_PDP,
+    UPDATE_PDP
+} from "./AddPdpElement.view.actions";
+
+const tempPerson = {
+    cid: "pothol",
+    nick: "Potholes",
+    mail: "derp@derp.se"
+};
 
 export function addPdp(pdp) {
-    return {
-        type: ADD_PDP,
-        pdp
-    };
+    // Here we should set the creator to the current user if it's undefined.
+    pdp.creator = tempPerson;
+    pdp.versionNumber = pdp.versionNumber + 1;
+
+    if (pdp.id) {
+        return {
+            type: UPDATE_PDP,
+            pdp: pdp
+        };
+    } else {
+        return {
+            type: ADD_PDP,
+            pdp: pdp
+        };
+    }
 }
 
 export function saveInProgressPdp(pdp) {
     return {
         type: SAVE_IN_PROGRESS_PDP,
-        pdp
+        pdp: pdp
     };
 }

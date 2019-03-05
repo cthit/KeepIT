@@ -1,14 +1,22 @@
 import { SAVE_IN_PROGRESS_PDP } from "./AddPdpElement.view.actions";
 
 const initialState = {
+    creator: {
+        cid: ""
+    },
     title: "",
     eula: "",
     start: getFormattedDate(),
     end: getFormattedDate(),
-    sensitive: false,
+    sensitivePDP: false,
     targetGroup: "",
-    committee: "digIT",
-    versionNumber: 0
+    committee: "",
+    versionNumber: -1,
+    chairman: {
+        cid: "",
+        nick: "",
+        mail: ""
+    }
 };
 
 export const addPdpElement = (state = initialState, action) => {
