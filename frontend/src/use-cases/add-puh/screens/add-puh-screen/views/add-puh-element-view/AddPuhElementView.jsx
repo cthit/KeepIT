@@ -21,15 +21,13 @@ const AddPuhElementView = props => (
                     eula: props.pdp.eula,
                     start: props.pdp.start,
                     end: props.pdp.end,
-                    sensitivePDP: props.pdp.sensitivePDP,
+                    sensitive: props.pdp.sensitive,
                     targetGroup: props.pdp.targetGroup,
                     committee: props.pdp.committee
                 }}
                 onSubmit={(values, actions) => {
                     values.committee = props.committees[values.committee];
                     values.versionNumber = props.pdp.versionNumber;
-                    console.log("Submitting values :::::::");
-                    console.log(values);
                     props.addPdp(values);
                     actions.resetForm();
                 }}
@@ -38,7 +36,7 @@ const AddPuhElementView = props => (
                     eula: yup.string().required(),
                     start: yup.string().required(),
                     end: yup.string().required(),
-                    sensitivePDP: yup.boolean().required(),
+                    sensitive: yup.boolean().required(),
                     targetGroup: yup.string().required(),
                     committee: yup
                         .string()
@@ -51,7 +49,7 @@ const AddPuhElementView = props => (
                     "eula",
                     "start",
                     "end",
-                    "sensitivePDP",
+                    "sensitive",
                     "targetGroup",
                     "committee"
                 ]}
@@ -71,16 +69,20 @@ const AddPuhElementView = props => (
                     start: {
                         component: DigitDateAndTimePicker,
                         componentProps: {
-                            upperLabel: "Start Date"
+                            upperLabel: "Start Date",
+                            showTodayButton: true,
+                            todayLabel: "Today"
                         }
                     },
                     end: {
                         component: DigitDateAndTimePicker,
                         componentProps: {
-                            upperLabel: "End Date"
+                            upperLabel: "End Date",
+                            showTodayButton: true,
+                            todayLabel: "Today"
                         }
                     },
-                    sensitivePDP: {
+                    sensitive: {
                         component: DigitCheckbox,
                         componentProps: {
                             primary: true,

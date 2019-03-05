@@ -8,7 +8,7 @@ const initialState = {
     eula: "",
     start: getFormattedDate(),
     end: getFormattedDate(),
-    sensitivePDP: false,
+    sensitive: false,
     targetGroup: "",
     committee: "",
     versionNumber: -1,

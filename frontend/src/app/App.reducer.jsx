@@ -45,14 +45,14 @@ export function pdp(
             console.log(action.pdp);
             // This should later be replaced with a post request to the server.
             var pdp = action.pdp;
+            var newArr = state.active;
+
             pdp.active = newArr;
-            pdp.id = "123123";
+            pdp.id = (123123 + newArr.length).toString();
             pdp.lastEdit = "2013-05-23T18:25:43.511Z";
             pdp.invalidated = false;
             pdp.creator = tempPerson;
             pdp.chairman = tempPerson;
-
-            var newArr = state.active;
             newArr.push(action.pdp);
             return Object.assign({}, state, (state.active = newArr));
         case UPDATE_PDP:

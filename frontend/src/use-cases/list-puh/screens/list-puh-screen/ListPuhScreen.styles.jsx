@@ -23,6 +23,7 @@ export const VR = styled.div`
 export const ListPuhScreenContainer = styled.div`
     margin: 10px;
     margin-right: 0px;
+    max-width: 100%;
 `;
 
 export const WindowContainer = styled.div`
@@ -38,6 +39,6 @@ export const KeepITGrid = styled.div`
 
 export const KeepITGridItem = styled.div`
     flex-grow: 1;
-    min-width: 900px;
+    min-width: 800px;
     margin: 10px;
 `;
