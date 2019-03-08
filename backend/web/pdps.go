@@ -1,9 +1,9 @@
 package web
 
 import (
-	"../../KeepIT"
 	"encoding/json"
 	"fmt"
+	"github.com/cthit/KeepIT/backend"
 	"github.com/gocraft/web"
 	"io/ioutil"
 	"net/http"

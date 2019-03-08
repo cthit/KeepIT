@@ -1,9 +1,9 @@
 package ldap
 
 import (
-	"../../KeepIT"
 	"crypto/tls"
 	"fmt"
+	"github.com/cthit/KeepIT/backend"
 	"gopkg.in/ldap.v2"
 	"strings"
 )
@@ -41,7 +41,7 @@ func (s LDAPPersonService) Person(cid string) (KeepIT.Person, error) {
 	searchRequest := ldap.NewSearchRequest(
 		fmt.Sprintf("uid=%s,ou=people,dc=chalmers,dc=it", cid),
 		ldap.ScopeWholeSubtree, ldap.NeverDerefAliases, 0, 0, false,
-		"(&(objectClass=*))",                                    // The filter to apply
+		"(&(objectClass=*))", // The filter to apply
 		[]string{"givenName", "sn", "nickname", "gdprEducated"}, // A list attributes to retrieve
 		nil,
 	)
@@ -82,7 +82,7 @@ func (s LDAPPersonService) chairman(group string) (KeepIT.Person, error) {
 
 		// extract AAAA from uid=AAAA,ou=people,d......
 		cid := strings.Split(strings.Split(basedn, ",")[0], "=")[1]
-		return s.person(cid)
+		return s.Person(cid)
 
 	} else {
 		return KeepIT.Person{}, fmt.Errorf("committee does not have a chairman")

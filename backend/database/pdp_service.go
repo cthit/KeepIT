@@ -1,7 +1,7 @@
 package database
 
 import (
-	"../../KeepIT"
+	"github.com/cthit/KeepIT/backend"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gocraft/dbr"
 	"time"

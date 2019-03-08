@@ -1,7 +1,7 @@
 package web
 
 import (
-	"../../KeepIT"
+	"github.com/cthit/KeepIT/backend"
 	"github.com/gocraft/web"
 	"net/http"
 )
@@ -43,7 +43,7 @@ func Router(
 	router.Delete("/pdp/:id", (*Context).DeletePDP)
 	router.Get("/pdp/:id/history", (*Context).ListPDPHistory)
 	router.Get("/login", (*Context).Login)
-	router.Get("/refresh", (*Context).Refresh)
+	//router.Get("/refresh", (*Context).Refresh)
 	return router
 }
 
