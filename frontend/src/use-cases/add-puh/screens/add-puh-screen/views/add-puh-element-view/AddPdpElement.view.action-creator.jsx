@@ -7,7 +7,7 @@ import {
 const tempPerson = {
     cid: "pothol",
     nick: "Potholes",
-    mail: "derp@derp.se"
+    mail: "pot@holes.shit"
 };
 
 export function addPdp(pdp) {

@@ -56,6 +56,7 @@ export function pdp(
             newArr.push(action.pdp);
             return Object.assign({}, state, (state.active = newArr));
         case UPDATE_PDP:
+            console.log("Update PDP:::::::::");
             var toBeUpdated;
             for (var i = 0; i < state.active.length; i++) {
                 if (state.active[i].id == action.pdp.id) {

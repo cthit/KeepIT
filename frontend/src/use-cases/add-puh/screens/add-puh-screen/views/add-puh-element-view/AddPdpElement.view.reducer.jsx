@@ -1,4 +1,5 @@
 import { SAVE_IN_PROGRESS_PDP } from "./AddPdpElement.view.actions";
+import { EDIT_PDP } from "../../../../../list-puh/screens/list-puh-screen/views/details-puh-view/DetailsPdp.view.actions";
 
 const initialState = {
     creator: {
@@ -23,6 +24,10 @@ export const addPdpElement = (state = initialState, action) => {
     switch (action.type) {
         case SAVE_IN_PROGRESS_PDP:
             return Object.assign({}, state, (state = action.pdp));
+        case EDIT_PDP:
+            console.log("Should have default data:");
+            console.log(action.pdp);
+            return action.pdp;
         default:
             return state;
     }

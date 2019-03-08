@@ -14,8 +14,6 @@ class App extends Component {
     render() {
         const { failedLoadingPdp } = this.props;
         console.log(failedLoadingPdp);
-        console.log("Window width: ");
-        console.log(window.innerWidth);
         return (
             <div>
                 {failedLoadingPdp}

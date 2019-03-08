@@ -3,25 +3,27 @@ import {
     DigitDesign,
     DigitText,
     DigitLayout,
-    DigitIfElseRendering
+    DigitIfElseRendering,
+    DigitButton
 } from "@cthit/react-digit-components";
 import Padding from "../../../../../../common-ui/views/padding";
 import HorizontalSpacing from "../../../../../../common-ui/views/horizontal-spacing";
 import {
     DetailsPuhViewContainer,
     Indent,
-    SensitiveText
+    SensitiveText,
+    ParallelText
 } from "./DetailsPuhView.styles";
 
-export const DetailsPuhView = ({ selected }) => (
+export const DetailsPuhView = props => (
     <DetailsPuhViewContainer>
         <DigitDesign.Card>
             <Padding>
                 <DigitLayout.Center>
-                    <DigitText.Title text={selected.title} />
+                    <DigitText.Title text={props.selected.title} />
                 </DigitLayout.Center>
                 <DigitIfElseRendering
-                    test={selected.sensitive}
+                    test={props.selected.sensitive}
                     ifRender={() => (
                         <DigitLayout.Center>
                             <SensitiveText>
@@ -33,34 +35,52 @@ export const DetailsPuhView = ({ selected }) => (
                 <Indent>
                     <HorizontalSpacing>
                         <DigitText.Text
-                            text={"From: " + formatDate(selected.start)}
+                            text={"From: " + formatDate(props.selected.start)}
                         />
                         <DigitText.Text
-                            text={"To: " + formatDate(selected.end)}
+                            text={"To: " + formatDate(props.selected.end)}
                         />
                     </HorizontalSpacing>
                 </Indent>
                 <DigitDesign.Divider />
                 <Indent>
-                    <DigitText.Text text={selected.eula} />
+                    <DigitText.Text text={props.selected.eula} />
                 </Indent>
                 <DigitDesign.Divider />
+
                 <Indent>
-                    <DigitText.Text
-                        text={"Created By: " + selected.creator.nick}
-                    />
-                    <DigitText.Text
-                        text={"In committee: " + selected.committee}
-                    />
-                    <DigitText.Text
-                        text={"Chairman: " + selected.chairman.nick}
-                    />
-                    <DigitText.Text
-                        text={"Target group: " + selected.targetGroup}
-                    />
-                    <DigitText.Text
-                        text={"Last edited: " + formatDate(selected.lastEdit)}
-                    />
+                    <ParallelText>
+                        <DigitText.Text
+                            text={"Created By: " + props.selected.creator.nick}
+                        />
+                        <DigitText.Text
+                            text={"For committee: " + props.selected.committee}
+                        />
+                    </ParallelText>
+                    <ParallelText>
+                        <DigitText.Text
+                            text={"Target group: " + props.selected.targetGroup}
+                        />
+                        <DigitText.Text
+                            text={"Chairman: " + props.selected.chairman.nick}
+                        />
+                    </ParallelText>
+                    <ParallelText>
+                        <DigitText.Text
+                            text={
+                                "Last edited: " +
+                                formatDate(props.selected.lastEdit)
+                            }
+                        />
+                        <DigitDesign.Link to="/add">
+                            <DigitButton
+                                text="Edit"
+                                primary
+                                raised
+                                onClick={() => props.EditPdp(props.selected)}
+                            />
+                        </DigitDesign.Link>
+                    </ParallelText>
                 </Indent>
             </Padding>
         </DigitDesign.Card>
