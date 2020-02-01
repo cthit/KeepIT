@@ -5,9 +5,9 @@ import {
 } from "./AddPdpElement.view.actions";
 
 const tempPerson = {
-    cid: "pothol",
-    nick: "Potholes",
-    mail: "pot@holes.shit"
+    cid: "temp",
+    nick: "Person",
+    mail: "tmp@person.se"
 };
 
 export function addPdp(pdp) {
